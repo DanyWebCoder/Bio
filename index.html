@@ -266,10 +266,7 @@
             width: 100%;
         }
 
-        /* Дистанция между Главной и Публикациями (~10% высоты экрана).
-           При прыжке на «Публикации» последняя строка главного текста
-           уходит вверх и не мелькает над заголовком.
-           Хочешь больше/меньше — меняй значение 10vh */
+        /* Дистанция между Главной и Публикациями (~10% высоты экрана) */
         #publications {
             margin-top: 10vh;
         }
@@ -446,15 +443,32 @@
             font-size: 0.9rem;
         }
 
-        /* Scroll reveal */
+        /* === SCROLL REVEAL БЕЗ ДЁРГАНЬЯ ===
+           Появление — выезд снизу (revealIn),
+           уход — просто растворение НА МЕСТЕ (revealOut, без сдвига),
+           поэтому последняя строка больше не "дрыгается" */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s ease-out;
         }
+
         .reveal.active {
             opacity: 1;
-            transform: translateY(0);
+            animation: revealIn 0.8s ease-out both;
+        }
+
+        .reveal.seen:not(.active) {
+            opacity: 0;
+            animation: revealOut 0.4s ease both;
+        }
+
+        @keyframes revealIn {
+            from { opacity: 0; transform: translateY(40px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes revealOut {
+            from { opacity: 1; transform: translateY(0); }
+            to   { opacity: 0; transform: translateY(0); }
         }
 
         /* === ПОДСВЕТКА (HOVER) === */
@@ -603,8 +617,6 @@
 
     <script>
         // === СБРОС СКРОЛЛА ПРИ ПЕРЕЗАГРУЗКЕ ===
-        // Браузер больше не запоминает позицию: после перезагрузки
-        // страница всегда открывается с Главной, навбар не путается
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
@@ -716,10 +728,13 @@
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    e.target.classList.add('animate', 'active');
+                    e.target.classList.add('animate', 'active', 'was-active');
                 } else {
                     e.target.classList.remove('animate', 'active');
-                    e.target.classList.add('seen');
+                    // обратная анимация только если блок уже был показан
+                    if (e.target.classList.contains('was-active')) {
+                        e.target.classList.add('seen');
+                    }
                 }
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
