@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dany.run.place</title>
+    <meta name="description" content="Моё цифровое пространство — публикации, проекты и связь со мной в одном месте.">
+    <title>Dany's сайт-хаб</title>
     <style>
         * {
             margin: 0;
@@ -33,7 +34,6 @@
             position: relative;
         }
 
-        /* Background floating dots */
         .bg-dots {
             position: fixed;
             top: 0;
@@ -61,7 +61,6 @@
             75% { transform: translate(10px, -10px); opacity: 0.6; }
         }
 
-        /* Header */
         header {
             position: fixed;
             top: 20px;
@@ -99,8 +98,6 @@
             color: var(--text-primary);
         }
 
-        /* Nav with sliding indicator
-           gap: 40px — расстояние между кнопками (меняй это число) */
         nav {
             position: relative;
             display: flex;
@@ -136,7 +133,6 @@
             transform: scale(0.95);
         }
 
-        /* Sliding pill indicator */
         .nav-indicator {
             position: absolute;
             height: 38px;
@@ -151,7 +147,6 @@
             will-change: left, width;
         }
 
-        /* Main Content */
         main {
             position: relative;
             z-index: 1;
@@ -178,7 +173,6 @@
             margin-bottom: 15px;
         }
 
-        /* === АНИМИРОВАННОЕ ПОДЧЁРКИВАНИЕ === */
         .highlight {
             position: relative;
             display: inline-block;
@@ -257,8 +251,6 @@
             padding: 0 20px;
         }
 
-        /* Sections
-           padding: 100px — расстояние между секциями страницы (меняй это число) */
         section {
             padding: 100px 20px;
             max-width: 1200px;
@@ -266,7 +258,6 @@
             width: 100%;
         }
 
-        /* Дистанция между Главной и Публикациями (~10% высоты экрана) */
         #publications {
             margin-top: 10vh;
         }
@@ -279,7 +270,6 @@
             color: var(--text-primary);
         }
 
-        /* Publications Container */
         .publications-container {
             background: rgba(59, 130, 246, 0.04);
             backdrop-filter: blur(30px);
@@ -368,7 +358,6 @@
             transform: scale(0.96);
         }
 
-        /* Contact Container */
         .contact-container {
             background: rgba(59, 130, 246, 0.04);
             backdrop-filter: blur(30px);
@@ -417,7 +406,6 @@
             font-size: 1.5rem;
         }
 
-        /* Footer */
         footer {
             position: relative;
             z-index: 1;
@@ -443,10 +431,6 @@
             font-size: 0.9rem;
         }
 
-        /* === SCROLL REVEAL БЕЗ ДЁРГАНЬЯ ===
-           Появление — выезд снизу (revealIn),
-           уход — просто растворение НА МЕСТЕ (revealOut, без сдвига),
-           поэтому последняя строка больше не "дрыгается" */
         .reveal {
             opacity: 0;
         }
@@ -471,7 +455,6 @@
             to   { opacity: 0; transform: translateY(0); }
         }
 
-        /* === ПОДСВЕТКА (HOVER) === */
         .logo:hover {
             transform: scale(1.05);
             background: rgba(59, 130, 246, 0.1);
@@ -504,7 +487,6 @@
 
         .footer-left a:hover { opacity: 0.8; }
 
-        /* Во время скролла залипшая подсветка гаснет */
         html.hover-off .logo:hover { transform: none; background: rgba(59, 130, 246, 0.06); }
         html.hover-off nav a:hover { color: var(--text-secondary); }
         html.hover-off nav a.active:hover { color: var(--accent); }
@@ -513,7 +495,6 @@
         html.hover-off .social-card:hover { background: rgba(59, 130, 246, 0.06); border-color: rgba(59, 130, 246, 0.1); transform: none; box-shadow: none; }
         html.hover-off .footer-left a:hover { opacity: 1; }
 
-        /* Responsive */
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -521,7 +502,6 @@
                 top: 10px;
             }
 
-            /* gap: 14px — расстояние между кнопками на телефонах (меняй это число) */
             nav {
                 padding: 6px 10px;
                 gap: 14px;
@@ -542,7 +522,6 @@
                 transform: translateY(-50%);
             }
 
-            /* При прыжке по навигации секция останавливается чуть ниже шапки */
             section {
                 scroll-margin-top: 60px;
             }
@@ -580,7 +559,6 @@
     </header>
 
     <main>
-        <!-- Главная / Начало -->
         <div id="about" class="reveal active-section">
             <h1>Добро пожаловать в<br>мое цифровое пространство</h1>
             <p class="subtitle">Я Dany — <span class="highlight">Дизайнер и Вайбкодер</span></p>
@@ -589,7 +567,6 @@
             </p>
         </div>
 
-        <!-- Публикации -->
         <section id="publications">
             <h2 class="section-title reveal">Публикации</h2>
             <div class="publications-container reveal">
@@ -601,7 +578,6 @@
             </button>
         </section>
 
-        <!-- Связь -->
         <section id="contact">
             <h2 class="section-title reveal">Связь</h2>
             <div class="contact-container reveal">
@@ -616,7 +592,6 @@
     </footer>
 
     <script>
-        // === СБРОС СКРОЛЛА ПРИ ПЕРЕЗАГРУЗКЕ ===
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
@@ -638,7 +613,6 @@
         const visibleLimit = 3;
         let currentActiveSection = 'about';
 
-        // === BACKGROUND DOTS ===
         function createBgDots() {
             const container = document.getElementById('bgDots');
             for (let i = 0; i < 120; i++) {
@@ -653,7 +627,6 @@
             }
         }
 
-        // === DATE FORMATTER ===
         function formatDate(dateString) {
             const [datePart, timePart] = dateString.split(' ');
             const [day, month, year] = datePart.split('-');
@@ -663,7 +636,6 @@
             return `${date.getDate()} ${months[date.getMonth()]} ${year} года в ${hours}:${minutes}`;
         }
 
-        // === PUBLICATIONS RENDER ===
         function renderPublications() {
             const grid = document.getElementById('publicationsGrid');
             grid.innerHTML = '';
@@ -707,7 +679,6 @@
             renderPublications();
         }
 
-        // === SOCIAL LINKS RENDER ===
         function renderSocialLinks() {
             const grid = document.getElementById('socialGrid');
             grid.innerHTML = '';
@@ -724,26 +695,26 @@
             observeElements();
         }
 
-        // === SCROLL REVEAL OBSERVER ===
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => {
+                const el = e.target;
                 if (e.isIntersecting) {
-                    e.target.classList.add('animate', 'active', 'was-active');
+                    clearTimeout(el.revealHideTimer);
+                    el.classList.add('animate', 'active', 'was-active');
                 } else {
-                    e.target.classList.remove('animate', 'active');
-                    // обратная анимация только если блок уже был показан
-                    if (e.target.classList.contains('was-active')) {
-                        e.target.classList.add('seen');
-                    }
+                    clearTimeout(el.revealHideTimer);
+                    el.revealHideTimer = setTimeout(() => {
+                        el.classList.remove('animate', 'active');
+                        if (el.classList.contains('was-active')) el.classList.add('seen');
+                    }, 150);
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }, { threshold: 0 });
 
         function observeElements() {
             document.querySelectorAll('.reveal, .publication-card:not(.hidden), .social-card').forEach(el => revealObserver.observe(el));
         }
 
-        // === HOVER-OFF: подсветка убирается от скролла ===
         const isTouch = window.matchMedia('(pointer: coarse)').matches;
         let hoverOffTimer = null;
 
@@ -759,7 +730,6 @@
             document.documentElement.classList.remove('hover-off');
         }, { passive: true });
 
-        // === NAV INDICATOR LOGIC (STABLE) ===
         const sections = ['about', 'publications', 'contact'];
         const navLinks = document.querySelectorAll('.nav-link');
         const indicator = document.getElementById('navIndicator');
@@ -819,7 +789,6 @@
             }
         }
 
-        // Init & Events
         window.addEventListener('scroll', trackScroll, { passive: true });
         window.addEventListener('resize', () => updateIndicator(currentActiveSection));
 
@@ -841,7 +810,6 @@
             });
         });
 
-        // Start
         function init() {
             createBgDots();
             renderPublications();
