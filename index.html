@@ -47,7 +47,8 @@
         .bg-dot {
             position: absolute;
             width: 3px;
-            height: 3px;            background: var(--accent);
+            height: 3px;
+            background: var(--accent);
             border-radius: 50%;
             opacity: 0.3;
             animation: floatDot 20s infinite ease-in-out;
@@ -89,24 +90,21 @@
             gap: 6px;
         }
 
-        .logo:hover {
-            transform: scale(1.05);
-            background: rgba(59, 130, 246, 0.1);
-        }
-
         .logo-blue {
             color: var(--accent);
-            text-shadow: 0 0 12px rgba(59, 130, 246, 0.6);        }
+            text-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+        }
 
         .logo-white {
             color: var(--text-primary);
         }
 
-        /* Nav with sliding indicator */
+        /* Nav with sliding indicator
+           gap: 40px — расстояние между кнопками (меняй это число) */
         nav {
             position: relative;
             display: flex;
-            gap: 20px;
+            gap: 40px;
             align-items: center;
             padding: 12px 25px;
             background: rgba(59, 130, 246, 0.06);
@@ -122,7 +120,7 @@
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.95rem;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.3s ease;
             padding: 8px 18px;
             border-radius: 35px;
             position: relative;
@@ -134,10 +132,6 @@
             font-weight: 600;
         }
 
-        nav a:hover {
-            color: var(--accent);
-        }
-
         nav a:active {
             transform: scale(0.95);
         }
@@ -145,7 +139,8 @@
         /* Sliding pill indicator */
         .nav-indicator {
             position: absolute;
-            height: 38px;            background: rgba(59, 130, 246, 0.12);
+            height: 38px;
+            background: rgba(59, 130, 246, 0.12);
             border: 1px solid rgba(59, 130, 246, 0.35);
             border-radius: 50px;
             box-shadow: 0 0 15px var(--accent-glow);
@@ -194,7 +189,8 @@
             content: '';
             position: absolute;
             left: 0;
-            bottom: -6px;            height: 2px;
+            bottom: -6px;
+            height: 2px;
             width: 100%;
             border-radius: 2px;
             background: var(--accent);
@@ -209,6 +205,14 @@
 
         .reveal.active .highlight::after {
             animation: underlineGrow 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
+        }
+
+        .reveal.seen:not(.active) .highlight {
+            animation: highlightColorBack 0.5s ease both;
+        }
+
+        .reveal.seen:not(.active) .highlight::after {
+            animation: underlineShrink 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
         }
 
         @keyframes highlightColor {
@@ -227,6 +231,22 @@
             to   { transform: scaleX(1); }
         }
 
+        @keyframes highlightColorBack {
+            from {
+                color: var(--accent);
+                text-shadow: 0 0 12px rgba(59, 130, 246, 0.6);
+            }
+            to {
+                color: var(--text-secondary);
+                text-shadow: 0 0 0 rgba(59, 130, 246, 0);
+            }
+        }
+
+        @keyframes underlineShrink {
+            from { transform: scaleX(1); }
+            to   { transform: scaleX(0); }
+        }
+
         .description {
             font-size: 1.1rem;
             color: var(--text-secondary);
@@ -237,13 +257,23 @@
             padding: 0 20px;
         }
 
-        /* Sections */
+        /* Sections
+           padding: 100px — расстояние между секциями страницы (меняй это число) */
         section {
             padding: 100px 20px;
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
         }
+
+        /* Дополнительная дистанция между Главной и Публикациями (~7% высоты экрана).
+           Благодаря этому при прыжке на «Публикации» последняя строка главного
+           текста уходит вверх и не мелькает над заголовком.
+           Хочешь больше/меньше — меняй значение 7vh */
+        #publications {
+            margin-top: 7vh;
+        }
+
         .section-title {
             font-size: 2.5rem;
             font-weight: 700;
@@ -288,11 +318,6 @@
         .publication-card.animate {
             animation: slideUpFade 0.6s ease-out forwards;
         }
-
-        .publication-card:hover {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: rgba(59, 130, 246, 0.25);
-            transform: translateY(-3px);        }
 
         .publication-card.hidden {
             display: none;
@@ -341,13 +366,6 @@
             transition: all 0.3s ease;
             margin: 0 auto;
         }
-        .show-more-btn:hover {
-            background: var(--accent);
-            color: var(--dark-bg);
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px var(--accent-glow);
-        }
 
         .show-more-btn:active {
             transform: scale(0.96);
@@ -390,14 +408,8 @@
             transform: translateY(30px) scale(0.9);
         }
 
-        .social-card.animate {            animation: socialSlideUp 0.6s ease-out forwards;
-        }
-
-        .social-card:hover {
-            background: rgba(59, 130, 246, 0.1);
-            border-color: var(--accent);
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2);
+        .social-card.animate {
+            animation: socialSlideUp 0.6s ease-out forwards;
         }
 
         @keyframes socialSlideUp {
@@ -429,8 +441,6 @@
             transition: opacity 0.3s;
         }
 
-        .footer-left a:hover { opacity: 0.8; }
-
         .footer-right {
             color: var(--text-secondary);
             font-size: 0.9rem;
@@ -439,12 +449,55 @@
         /* Scroll reveal */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);            transition: all 0.8s ease-out;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
         }
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* === ПОДСВЕТКА (HOVER) === */
+        .logo:hover {
+            transform: scale(1.05);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .publication-card:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .show-more-btn:hover {
+            background: var(--accent);
+            color: var(--dark-bg);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .social-card:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2);
+        }
+
+        .footer-left a:hover { opacity: 0.8; }
+
+        /* Во время скролла залипшая подсветка гаснет */
+        html.hover-off .logo:hover { transform: none; background: rgba(59, 130, 246, 0.06); }
+        html.hover-off nav a:hover { color: var(--text-secondary); }
+        html.hover-off nav a.active:hover { color: var(--accent); }
+        html.hover-off .publication-card:hover { background: rgba(59, 130, 246, 0.06); border-color: rgba(59, 130, 246, 0.1); transform: none; }
+        html.hover-off .show-more-btn:hover { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.25); color: var(--accent); transform: none; box-shadow: none; }
+        html.hover-off .social-card:hover { background: rgba(59, 130, 246, 0.06); border-color: rgba(59, 130, 246, 0.1); transform: none; box-shadow: none; }
+        html.hover-off .footer-left a:hover { opacity: 1; }
 
         /* Responsive */
         @media (max-width: 768px) {
@@ -454,9 +507,10 @@
                 top: 10px;
             }
 
+            /* gap: 14px — расстояние между кнопками на телефонах (меняй это число) */
             nav {
                 padding: 6px 10px;
-                gap: 8px;
+                gap: 14px;
                 width: fit-content;
                 margin: 0 auto;
                 max-width: 98%;
@@ -474,6 +528,11 @@
                 transform: translateY(-50%);
             }
 
+            /* При прыжке по навигации секция останавливается чуть ниже шапки */
+            section {
+                scroll-margin-top: 60px;
+            }
+
             .publications-grid, .social-grid {
                 grid-template-columns: 1fr;
             }
@@ -488,7 +547,8 @@
                 text-align: center;
             }
         }
-    </style></head>
+    </style>
+</head>
 <body>
     <div class="bg-dots" id="bgDots"></div>
 
@@ -537,7 +597,8 @@
     </main>
 
     <footer>
-        <div class="footer-left">Made by <a href="#" id="footerLink" target="_blank">Dany</a></div>        <div class="footer-right">© Dany 2026</div>
+        <div class="footer-left">Made by <a href="#" id="footerLink" target="_blank">Dany</a></div>
+        <div class="footer-right">© Dany 2026</div>
     </footer>
 
     <script>
@@ -586,7 +647,8 @@
             const grid = document.getElementById('publicationsGrid');
             grid.innerHTML = '';
             const sorted = [...CONFIG.publications].sort((a, b) => {
-                const parse = d => new Date(d.split(' ')[0].split('-').reverse().join('-'));                return parse(b.date) - parse(a.date);
+                const parse = d => new Date(d.split(' ')[0].split('-').reverse().join('-'));
+                return parse(b.date) - parse(a.date);
             });
 
             sorted.forEach((pub, i) => {
@@ -635,7 +697,8 @@
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
                 a.style.animationDelay = `${i * 0.15}s`;
-                a.innerHTML = `<span class="social-icon">${link.icon}</span><span>${link.name}</span>`;                grid.appendChild(a);
+                a.innerHTML = `<span class="social-icon">${link.icon}</span><span>${link.name}</span>`;
+                grid.appendChild(a);
             });
             observeElements();
         }
@@ -643,8 +706,12 @@
         // === SCROLL REVEAL OBSERVER ===
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => {
-                if (e.isIntersecting) { e.target.classList.add('animate', 'active'); }
-                else { e.target.classList.remove('animate', 'active'); }
+                if (e.isIntersecting) {
+                    e.target.classList.add('animate', 'active');
+                } else {
+                    e.target.classList.remove('animate', 'active');
+                    e.target.classList.add('seen');
+                }
             });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
@@ -652,21 +719,34 @@
             document.querySelectorAll('.reveal, .publication-card:not(.hidden), .social-card').forEach(el => revealObserver.observe(el));
         }
 
+        // === HOVER-OFF: подсветка убирается от скролла ===
+        const isTouch = window.matchMedia('(pointer: coarse)').matches;
+        let hoverOffTimer = null;
+
+        window.addEventListener('scroll', () => {
+            document.documentElement.classList.add('hover-off');
+            if (!isTouch) {
+                clearTimeout(hoverOffTimer);
+                hoverOffTimer = setTimeout(() => document.documentElement.classList.remove('hover-off'), 250);
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchstart', () => {
+            document.documentElement.classList.remove('hover-off');
+        }, { passive: true });
+
         // === NAV INDICATOR LOGIC (STABLE) ===
         const sections = ['about', 'publications', 'contact'];
         const navLinks = document.querySelectorAll('.nav-link');
         const indicator = document.getElementById('navIndicator');
         const nav = document.getElementById('nav');
 
-        // Блокировка трекинга на время программного (плавного) скролла,
-        // чтобы индикатор не прыгал по промежуточным секциям
         let isAutoScrolling = false;
         let scrollEndTimer = null;
 
         function armScrollLock() {
             isAutoScrolling = true;
             clearTimeout(scrollEndTimer);
-            // отпускаем через 150мс после ПОСЛЕДНЕГО скролл-события (скролл закончился)
             scrollEndTimer = setTimeout(() => {
                 isAutoScrolling = false;
                 trackScroll();
@@ -684,6 +764,7 @@
 
             navLinks.forEach(l => l.classList.remove('active'));
             activeLink.classList.add('active');
+
             const navRect = nav.getBoundingClientRect();
             const linkRect = activeLink.getBoundingClientRect();
 
@@ -692,8 +773,6 @@
         }
 
         function trackScroll() {
-            // Пока едет плавный скролл после клика — не трогаем индикатор,
-            // просто продлеваем блокировку до конца скролла
             if (isAutoScrolling) {
                 armScrollLock();
                 return;
@@ -720,7 +799,6 @@
         window.addEventListener('scroll', trackScroll, { passive: true });
         window.addEventListener('resize', () => updateIndicator(currentActiveSection));
 
-        // Пользователь перехватил скролл (колесо / палец) — сразу снимаем блокировку
         ['wheel', 'touchstart'].forEach(evt =>
             window.addEventListener(evt, disarmScrollLock, { passive: true })
         );
@@ -730,10 +808,10 @@
                 e.preventDefault();
                 const targetId = link.dataset.section;
 
-                // Сразу фиксируем индикатор на нажатом пункте и блокируем трекинг
                 currentActiveSection = targetId;
                 updateIndicator(targetId);
                 armScrollLock();
+
                 if (targetId === 'about') window.scrollTo({ top: 0, behavior: 'smooth' });
                 else document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
             });
