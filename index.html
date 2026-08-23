@@ -546,13 +546,13 @@
     <div class="bg-dots" id="bgDots"></div>
 
     <header>
-        <a href="#" class="logo">
+        <a href="#home" class="logo">
             <span>🌐</span>
             <span class="logo-text"><span class="logo-blue">Dany</span><span class="logo-white">.run.place</span></span>
         </a>
         <nav id="nav">
             <div class="nav-indicator" id="navIndicator"></div>
-            <a href="#" class="nav-link active" data-section="about">Главная</a>
+            <a href="#home" class="nav-link active" data-section="about">Главная</a>
             <a href="#publications" class="nav-link" data-section="publications">Публикации</a>
             <a href="#contact" class="nav-link" data-section="contact">Связь</a>
         </nav>
@@ -595,8 +595,6 @@
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
         }
-        window.scrollTo(0, 0);
-        window.addEventListener('load', () => window.scrollTo(0, 0));
 
         const CONFIG = {
             publications: [
@@ -798,6 +796,36 @@
             }
         }
 
+        const sectionToHash = { about: 'home', publications: 'publications', contact: 'contact' };
+
+        function goToSection(sectionId, smooth) {
+            currentActiveSection = sectionId;
+            updateIndicator(sectionId);
+            armScrollLock();
+            history.replaceState(null, '', '#' + sectionToHash[sectionId]);
+
+            if (sectionId === 'about') window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+            else document.getElementById(sectionId)?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' });
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                goToSection(link.dataset.section, true);
+            });
+        });
+
+        document.querySelector('.logo').addEventListener('click', e => {
+            e.preventDefault();
+            goToSection('about', true);
+        });
+
+        function applyInitialHash() {
+            const hash = location.hash.slice(1);
+            const sectionId = (hash === 'publications' || hash === 'contact') ? hash : 'about';
+            goToSection(sectionId, false);
+        }
+
         window.addEventListener('scroll', trackScroll, { passive: true });
         window.addEventListener('resize', () => updateIndicator(currentActiveSection));
 
@@ -805,26 +833,13 @@
             window.addEventListener(evt, disarmScrollLock, { passive: true })
         );
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                const targetId = link.dataset.section;
-
-                currentActiveSection = targetId;
-                updateIndicator(targetId);
-                armScrollLock();
-
-                if (targetId === 'about') window.scrollTo({ top: 0, behavior: 'smooth' });
-                else document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-
         function init() {
             createBgDots();
             renderPublications();
             renderSocialLinks();
+            applyInitialHash();
             setTimeout(() => {
-                updateIndicator('about');
+                updateIndicator(currentActiveSection);
                 observeElements();
             }, 100);
         }
