@@ -42,6 +42,9 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            transform: translateZ(0);
+            will-change: transform;
+            backface-visibility: hidden;
         }
 
         .bg-dot {
@@ -52,13 +55,15 @@
             border-radius: 50%;
             opacity: 0.3;
             animation: floatDot 20s infinite ease-in-out;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         @keyframes floatDot {
-            0%, 100% { transform: translate(0, 0); opacity: 0.3; }
-            25% { transform: translate(20px, -20px); opacity: 0.5; }
-            50% { transform: translate(-15px, 15px); opacity: 0.4; }
-            75% { transform: translate(10px, -10px); opacity: 0.6; }
+            0%, 100% { transform: translate3d(0, 0, 0); opacity: 0.3; }
+            25% { transform: translate3d(12px, -12px, 0); opacity: 0.5; }
+            50% { transform: translate3d(-10px, 10px, 0); opacity: 0.4; }
+            75% { transform: translate3d(8px, -8px, 0); opacity: 0.6; }
         }
 
         header {
@@ -618,7 +623,7 @@
                 dot.className = 'bg-dot';
                 dot.style.left = Math.random() * 100 + '%';
                 dot.style.top = Math.random() * 100 + '%';
-                dot.style.animationDelay = Math.random() * 20 + 's';
+                dot.style.animationDelay = -Math.random() * 20 + 's';
                 dot.style.animationDuration = (15 + Math.random() * 15) + 's';
                 dot.style.opacity = 0.15 + Math.random() * 0.3;
                 container.appendChild(dot);
