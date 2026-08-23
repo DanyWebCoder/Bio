@@ -698,16 +698,25 @@
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => {
                 const el = e.target;
+
                 if (e.isIntersecting) {
                     clearTimeout(el.revealHideTimer);
                     el.classList.add('animate', 'active', 'was-active');
-                } else {
-                    clearTimeout(el.revealHideTimer);
-                    el.revealHideTimer = setTimeout(() => {
-                        el.classList.remove('animate', 'active');
-                        if (el.classList.contains('was-active')) el.classList.add('seen');
-                    }, 150);
+                    return;
                 }
+
+                const vh = window.innerHeight;
+                const rect = e.boundingClientRect;
+                const goneUp = rect.bottom < 0;
+                const goneDown = rect.top > vh + 80;
+
+                if (!goneUp && !goneDown) return;
+
+                clearTimeout(el.revealHideTimer);
+                el.revealHideTimer = setTimeout(() => {
+                    el.classList.remove('animate', 'active');
+                    if (el.classList.contains('was-active')) el.classList.add('seen');
+                }, 150);
             });
         }, { threshold: 0 });
 
