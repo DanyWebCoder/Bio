@@ -394,7 +394,7 @@
             overflow: hidden;
             background: linear-gradient(180deg, transparent 0%, rgba(255, 140, 0, 0.03) 50%, rgba(139, 69, 19, 0.05) 100%);
             border-radius: 32px;
-            margin-top: 30vh;
+            margin-top: 15vh;
         }
 
         .falling-leaves {
@@ -1060,7 +1060,7 @@
             transition: all 0.3s ease;
         }
 
-        .prize-card:hover:not(.claimed) {
+        .prize-card:hover:not(.claimed):not(.region-locked) {
             background: rgba(255, 140, 0, 0.1);
             border-color: rgba(255, 140, 0, 0.35);
             transform: translateY(-5px);
@@ -1070,6 +1070,12 @@
         .prize-card.claimed {
             opacity: 0.5;
             filter: grayscale(0.6);
+            cursor: not-allowed;
+        }
+
+        .prize-card.region-locked {
+            opacity: 0.5;
+            filter: grayscale(0.6) blur(0.5px);
             cursor: not-allowed;
         }
 
@@ -1110,6 +1116,18 @@
             font-weight: 600;
         }
 
+        .prize-region-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 10px;
+            background: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -1138,6 +1156,10 @@
             }
 
             section { scroll-margin-top: 60px; }
+
+            #event {
+                margin-top: 30vh;
+            }
 
             .publications-grid, .social-grid, .challenges-grid, .prizes-grid {
                 grid-template-columns: 1fr;
@@ -1259,7 +1281,7 @@
                         <div>
                             <div class="challenge-icon">🔋</div>
                             <div class="challenge-title">Аккумулятор</div>
-                            <div class="challenge-desc">Проведите питание от батареи к листу: вращайте трубы (│ и ─), пока весь путь не станет зелёным и правильным!</div>
+                            <div class="challenge-desc">Проведите питание от батареи к листу: вращайте трубы (│ и ─), пока весь путь не станет зелёным!</div>
                         </div>
                         <button class="challenge-btn" onclick="openChallenge(2)" disabled>Откроется 1 октября</button>
                     </div>
@@ -1276,7 +1298,7 @@
                 </div>
 
                 <div class="code-section reveal">
-                    <h3>Введи полный код</h3>
+                    <h3>Введите полный код</h3>
                     <div class="code-parts" id="codeParts">
                         <span class="code-part locked" id="part1">RDC9</span>
                         <span class="code-part locked" id="part2">M0F4</span>
@@ -1338,6 +1360,26 @@
     </div>
 
     <script>
+        const RUSSIAN_TIMEZONES = [
+            'Europe/Kaliningrad', 'Europe/Moscow', 'Europe/Simferopol',
+            'Europe/Volgograd', 'Europe/Astrakhan', 'Europe/Saratov',
+            'Europe/Samara', 'Europe/Ulyanovsk',
+            'Asia/Yekaterinburg', 'Asia/Omsk', 'Asia/Novosibirsk',
+            'Asia/Barnaul', 'Asia/Tomsk', 'Asia/Novokuznetsk',
+            'Asia/Krasnoyarsk', 'Asia/Irkutsk', 'Asia/Chita',
+            'Asia/Yakutsk', 'Asia/Khandyga', 'Asia/Vladivostok',
+            'Asia/Ust-Nera', 'Asia/Magadan', 'Asia/Sakhalin',
+            'Asia/Srednekolymsk', 'Asia/Kamchatka', 'Asia/Anadyr'
+        ];
+
+        let IS_RUSSIA = false;
+        try {
+            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            if (tz && RUSSIAN_TIMEZONES.indexOf(tz) !== -1) {
+                IS_RUSSIA = true;
+            }
+        } catch (e) {}
+
         const FIRST_MECTO = true;
         const SECOND_MECTO = true;
         const THIRD_MECTO = true;
@@ -1359,7 +1401,7 @@
                 { date: '04-05-2026 18:51', title: 'Первая публикация', excerpt: 'Здравствуйте всем! Это первая публикация на сайте, здесь будут новости и много чего интересного.' },
                 { date: '01-06-2026 19:04', title: 'Выход из бета-версии', excerpt: 'Уважаемые посетители сайта! С 4 мая по 1 июня сайт прошёл через множество изменений и улучшений. Я рад сообщить, что сайт наконец вышел из бета-версии! Спасибо за вашу поддержку.' },
                 { date: '22-08-2026 20:30', title: 'Уважаемые посетители сайта!', excerpt: 'Я выпустил небольшое обновление сайта: Исправил несколько ошибок и Улучшил дизайн.' },
-                { date: '05-09-2026 14:49', title: 'Крупное обновление', excerpt: 'Я выпустил крупное обновление, новая вкладка - событие. Теперь каждую осень (Зиму тоже может быть, но это не точно) будут проходить события с призами.'}
+                { date: '05-09-2026 14:49', title: 'Крупное обновление', excerpt: ' Я выпустил крупное обновление, новая вкладка - событие. Теперь каждую осень (Зиму тдже может бытью но это не точно) будут проходить события с призами.' }
             ],
             socialLinks: [
                 { icon: '✈️', name: 'Telegram Channel', url: 'https://t.me/TgThen' }
@@ -1906,7 +1948,7 @@
             if (puzzleState.join(',') === '1,2,3,4,5,6,7,8,0') {
                 puzzleWon = true;
                 const statusEl = document.getElementById('puzzleStatus');
-                statusEl.textContent = '✅ Победа! 1-ая часть кода: RDC9';
+                statusEl.textContent = '✅ Победа! Код: RDC9';
                 statusEl.style.color = '#4caf50';
                 savePart(1, 'RDC9');
                 setTimeout(closeModal, 1500);
@@ -2021,9 +2063,9 @@
             buildPipeGame();
             container.innerHTML = `
                 <h2 class="modal-title">🔋 Аккумулятор</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 20px; text-align: center;">Нажимайте на трубы, чтобы вращать их (│ ↔ ─). Проведи зелёное электричество от батареи к листу!</p>
+                <p style="color: var(--text-secondary); margin-bottom: 20px; text-align: center;">Нажимайте на трубы, чтобы вращать их (│ ↔ ─). Проведите зелёное электричество от батареи к листу!</p>
                 <div class="pipe-grid" id="pipeGrid"></div>
-                <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;" id="batteryStatus">Вращайте трубы, чтобы соединить путь</p>
+                <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;" id="batteryStatus">Вращай трубы, чтобы соединить путь</p>
             `;
             renderPipeGrid();
         }
@@ -2091,7 +2133,7 @@
                 pipeWon = true;
                 const statusEl = document.getElementById('batteryStatus');
                 if (statusEl) {
-                    statusEl.textContent = '✅ Путь создан! 2-ая часть кода: M0F4';
+                    statusEl.textContent = '✅ Путь создан! Код: M0F4';
                     statusEl.style.color = '#4caf50';
                 }
                 savePart(2, 'M0F4');
@@ -2181,7 +2223,7 @@
                 straw.hidden = true;
                 strawGameWon = true;
                 const statusEl = document.getElementById('strawStatus');
-                statusEl.textContent = '✅ Вы нашли иголку! 3-ья часть кода: G7FALL';
+                statusEl.textContent = '✅ Вы нашли иголку! Код: G7FALL';
                 statusEl.style.color = '#4caf50';
                 savePart(3, 'G7FALL');
                 renderCurrentStrawLayer();
@@ -2197,7 +2239,7 @@
                 if (currentStrawLayer < TOTAL_LAYERS - 1) {
                     currentStrawLayer++;
                     const statusEl = document.getElementById('strawStatus');
-                    statusEl.textContent = `Слой очищен! Переходим к слою ${currentStrawLayer + 1}...`;
+                    statusEl.textContent = `Слой очищен! Переход к слою ${currentStrawLayer + 1}...`;
                     statusEl.style.color = '#ff8c00';
                     setTimeout(() => {
                         statusEl.textContent = '';
@@ -2249,27 +2291,43 @@
                 return;
             }
 
-            const allClaimed = !FIRST_MECTO && !SECOND_MECTO && !THIRD_MECTO;
+            banner.classList.add('active');
+            banner.classList.remove('success', 'warning');
+
             const bannerIcon = document.getElementById('bannerIcon');
             const bannerTitle = document.getElementById('bannerTitle');
             const bannerDesc = document.getElementById('bannerDesc');
             const bannerBtn = document.getElementById('bannerBtn');
 
-            banner.classList.add('active');
-            banner.classList.remove('success', 'warning');
-
-            if (allClaimed) {
-                banner.classList.add('warning');
-                bannerIcon.textContent = '⚠️';
-                bannerTitle.textContent = 'Все призы уже разобрали!';
-                bannerDesc.textContent = '3 человека уже получили призы, больше не получится.';
-                bannerBtn.textContent = 'Подробнее';
+            if (IS_RUSSIA) {
+                if (!FIRST_MECTO) {
+                    banner.classList.add('warning');
+                    bannerIcon.textContent = '⚠️';
+                    bannerTitle.textContent = 'Мишка уже разобран!';
+                    bannerDesc.textContent = 'К сожалению, приз «Мишка» уже забрали. VPN-призы недоступны в вашем регионе.';
+                    bannerBtn.textContent = 'Подробнее';
+                } else {
+                    banner.classList.add('success');
+                    bannerIcon.textContent = '🧸';
+                    bannerTitle.textContent = 'Код активирован!';
+                    bannerDesc.textContent = 'Вам доступен приз «Мишка» за 15 звёзд. VPN-призы недоступны в вашем регионе.';
+                    bannerBtn.textContent = 'Забрать мишку';
+                }
             } else {
-                banner.classList.add('success');
-                bannerIcon.textContent = '🎁';
-                bannerTitle.textContent = 'Код активирован!';
-                bannerDesc.textContent = 'Напишите в ЛС вместе со скриншотом';
-                bannerBtn.textContent = 'Забрать приз';
+                const allClaimed = !FIRST_MECTO && !SECOND_MECTO && !THIRD_MECTO;
+                if (allClaimed) {
+                    banner.classList.add('warning');
+                    bannerIcon.textContent = '⚠️';
+                    bannerTitle.textContent = 'Все призы уже разобрали!';
+                    bannerDesc.textContent = '3 человека уже получили призы, больше не получится.';
+                    bannerBtn.textContent = 'Подробнее';
+                } else {
+                    banner.classList.add('success');
+                    bannerIcon.textContent = '🎁';
+                    bannerTitle.textContent = 'Код активирован!';
+                    bannerDesc.textContent = 'Напишите в ЛС вместе со скриншотом';
+                    bannerBtn.textContent = 'Забрать приз';
+                }
             }
         }
 
@@ -2279,9 +2337,14 @@
             const card3 = document.getElementById('prizeCard3');
 
             [card1, card2, card3].forEach(c => {
-                const badge = c.querySelector('.prize-claimed-badge');
+                const badge = c.querySelector('.prize-claimed-badge, .prize-region-badge');
                 if (badge) badge.remove();
-                c.classList.remove('claimed');
+                c.classList.remove('claimed', 'region-locked');
+                const info = c.querySelector('.prize-info');
+                if (info && info.dataset.original) {
+                    info.textContent = info.dataset.original;
+                    delete info.dataset.original;
+                }
             });
 
             if (!FIRST_MECTO) {
@@ -2291,20 +2354,28 @@
                 badge.textContent = 'Занято';
                 card1.appendChild(badge);
             }
-            if (!SECOND_MECTO) {
-                card2.classList.add('claimed');
-                const badge = document.createElement('div');
-                badge.className = 'prize-claimed-badge';
-                badge.textContent = 'Занято';
-                card2.appendChild(badge);
-            }
-            if (!THIRD_MECTO) {
-                card3.classList.add('claimed');
-                const badge = document.createElement('div');
-                badge.className = 'prize-claimed-badge';
-                badge.textContent = 'Занято';
-                card3.appendChild(badge);
-            }
+
+            [card2, card3].forEach((card, idx) => {
+                const isClaimed = idx === 0 ? !SECOND_MECTO : !THIRD_MECTO;
+                if (IS_RUSSIA) {
+                    card.classList.add('region-locked');
+                    const badge = document.createElement('div');
+                    badge.className = 'prize-region-badge';
+                    badge.textContent = '🚫 Регион';
+                    card.appendChild(badge);
+                    const info = card.querySelector('.prize-info');
+                    if (info) {
+                        info.dataset.original = info.textContent;
+                        info.textContent = '🚫 Этот приз не доступен в вашем регионе';
+                    }
+                } else if (isClaimed) {
+                    card.classList.add('claimed');
+                    const badge = document.createElement('div');
+                    badge.className = 'prize-claimed-badge';
+                    badge.textContent = 'Занято';
+                    card.appendChild(badge);
+                }
+            });
         }
 
         function updateTimer() {
