@@ -247,7 +247,7 @@
             width: 100%;
         }
 
-        #publications { margin-top: 10vh; }
+        #publications { margin-top: 15vh; }
 
         .section-title {
             font-size: 2.5rem;
@@ -604,8 +604,16 @@
             max-width: 500px;
             width: 100%;
             max-height: 90vh;
-            overflow-y: auto;
+            overflow: hidden;
             position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-scroll {
+            overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
         }
 
         .modal-close {
@@ -623,6 +631,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10;
         }
 
         .modal-close:hover { background: rgba(255, 255, 255, 0.15); }
@@ -632,6 +641,15 @@
             font-weight: 700;
             margin-bottom: 20px;
             padding-right: 40px;
+        }
+
+        .content-swap {
+            animation: contentSwap 0.3s ease both;
+        }
+
+        @keyframes contentSwap {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .how-step {
@@ -1128,6 +1146,441 @@
             font-weight: 600;
         }
 
+        .falling-nuts-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .falling-nut {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            pointer-events: none;
+            opacity: 0;
+            will-change: transform;
+        }
+
+        .ground-nut {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .nut-shadow {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38px;
+            height: 8px;
+            background: radial-gradient(ellipse, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.2) 40%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: shadowIdle 2s ease-in-out infinite;
+        }
+
+        @keyframes shadowIdle {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(0.85); opacity: 0.75; }
+        }
+
+        .nut-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            animation: nutIdle 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .nut-inner svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .ground-nut:hover .nut-inner {
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        .ground-nut.rare .nut-inner {
+            filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.6));
+        }
+
+        .ground-nut.legendary .nut-inner {
+            filter: drop-shadow(0 0 14px rgba(180, 130, 255, 0.8));
+        }
+
+        @keyframes nutIdle {
+            0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); }
+            50% { transform: translateY(-3px) rotate(var(--rot, 0deg)); }
+        }
+
+        @keyframes nutIdleLegendary {
+            0%, 100% { transform: translateY(0) rotate(calc(var(--rot, 0deg) - 2deg)); }
+            50% { transform: translateY(-4px) rotate(calc(var(--rot, 0deg) + 2deg)); }
+        }
+
+        .ground-nut.legendary .nut-inner {
+            animation-name: nutIdleLegendary;
+        }
+
+        .ground-nut.collecting .nut-inner {
+            animation: nutCollect 0.7s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+        }
+
+        .ground-nut.collecting .nut-shadow {
+            animation: shadowCollect 0.7s cubic-bezier(0.5, 0, 0.75, 0) forwards;
+        }
+
+        .ground-nut.collecting {
+            pointer-events: none;
+        }
+
+        @keyframes nutCollect {
+            0% { transform: translateY(0) rotate(var(--rot, 0deg)) scale(1); opacity: 1; }
+            50% { transform: translateY(-100px) rotate(var(--rot, 0deg)) scale(1.4); opacity: 1; }
+            100% { transform: translateY(-200px) rotate(var(--rot, 0deg)) scale(0); opacity: 0; }
+        }
+
+        @keyframes shadowCollect {
+            0% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(0.4); opacity: 0.5; }
+            100% { transform: translateX(-50%) scale(0); opacity: 0; }
+        }
+
+        .ground-nut.fading .nut-inner {
+            animation: nutFade 0.8s ease-out forwards;
+        }
+
+        .ground-nut.fading .nut-shadow {
+            animation: shadowFade 0.8s ease-out forwards;
+        }
+
+        .ground-nut.fading {
+            pointer-events: none;
+        }
+
+        @keyframes nutFade {
+            to { transform: translateY(20px) rotate(var(--rot, 0deg)); opacity: 0; }
+        }
+
+        @keyframes shadowFade {
+            to { transform: translateX(-50%) scale(0.5); opacity: 0; }
+        }
+
+        .leaf-burst {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            font-size: 1.4rem;
+            animation: leafBurst 2s ease-out forwards;
+        }
+
+        .leaf-burst.golden {
+            filter: drop-shadow(0 0 8px rgba(255, 204, 0, 0.8));
+        }
+
+        .leaf-burst.legendary-leaf {
+            filter: drop-shadow(0 0 10px rgba(180, 130, 255, 0.9)) hue-rotate(45deg);
+        }
+
+        @keyframes leafBurst {
+            0% { transform: translate(0, 0) rotate(0deg) scale(0); opacity: 1; }
+            40% { opacity: 1; }
+            100% { transform: translate(var(--bx), var(--by)) rotate(var(--br)) scale(1); opacity: 0; }
+        }
+
+        .collect-toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: rgba(10, 14, 26, 0.95);
+            border: 1px solid rgba(255, 204, 0, 0.4);
+            border-radius: 50px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: toastIn 0.4s ease-out both;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .collect-toast.rare {
+            border-color: rgba(255, 204, 0, 0.7);
+            box-shadow: 0 10px 30px rgba(255, 204, 0, 0.3);
+        }
+
+        .collect-toast.legendary {
+            border-color: rgba(180, 130, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(180, 130, 255, 0.5);
+        }
+
+        .collect-toast.out {
+            animation: toastOut 0.4s ease-in forwards;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translate(-50%, 20px); }
+            to { opacity: 1; transform: translate(-50%, 0); }
+        }
+
+        @keyframes toastOut {
+            to { opacity: 0; transform: translate(-50%, -20px); }
+        }
+
+        .nuts-section {
+            max-width: 700px;
+            margin: 0 auto 50px;
+            padding: 30px;
+            background: rgba(255, 140, 0, 0.05);
+            border: 1px solid rgba(255, 140, 0, 0.15);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .nuts-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .nuts-section .nuts-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .nuts-progress-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 12px 18px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+        }
+
+        .nuts-progress-text {
+            font-weight: 600;
+            color: #ff8c00;
+            min-width: 70px;
+        }
+
+        .nuts-progress-bar-bg {
+            flex-grow: 1;
+            height: 8px;
+            background: rgba(255, 140, 0, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .nuts-progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8b6914, #d4a017, #ffcc00);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .nuts-open-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: linear-gradient(135deg, #8b6914, #d4a017);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .nuts-open-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(212, 160, 23, 0.4);
+        }
+
+        .nuts-open-btn.archive {
+            background: linear-gradient(135deg, #555, #777);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .nuts-countdown {
+            margin-top: 15px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .nuts-archive-msg {
+            margin-top: 15px;
+            padding: 12px 18px;
+            background: rgba(255, 140, 0, 0.08);
+            border: 1px dashed rgba(255, 140, 0, 0.3);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .collection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .nut-card {
+            background: rgba(255, 140, 0, 0.06);
+            border: 1px solid rgba(255, 140, 0, 0.15);
+            border-radius: 14px;
+            padding: 16px 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 160px;
+        }
+
+        .nut-card:hover:not(.locked) {
+            background: rgba(255, 140, 0, 0.12);
+            border-color: rgba(255, 140, 0, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .nut-card.locked {
+            opacity: 0.35;
+            filter: grayscale(0.8) blur(1px);
+            cursor: default;
+        }
+
+        .nut-card.rare {
+            border-color: rgba(255, 204, 0, 0.4);
+            box-shadow: inset 0 0 20px rgba(255, 204, 0, 0.08);
+        }
+
+        .nut-card.rare.locked {
+            box-shadow: none;
+        }
+
+        .nut-card.legendary {
+            border-color: rgba(180, 130, 255, 0.5);
+            box-shadow: inset 0 0 25px rgba(180, 130, 255, 0.12);
+        }
+
+        .nut-card.legendary.locked {
+            box-shadow: none;
+        }
+
+        .nut-card-img {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nut-card-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .nut-card-rarity {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nut-card-rarity.common {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        .nut-card-rarity.rare {
+            background: rgba(255, 204, 0, 0.15);
+            color: #ffcc00;
+        }
+
+        .nut-card-rarity.legendary {
+            background: rgba(180, 130, 255, 0.2);
+            color: #b482ff;
+        }
+
+        .nut-card .question {
+            font-size: 2.5rem;
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .nut-card-chance {
+            margin-top: 6px;
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .nut-detail {
+            text-align: left;
+            padding: 10px;
+        }
+
+        .nut-detail-img {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .nut-detail-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .nut-detail-rarity {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .nut-detail-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        html.hover-off .nut-card:hover {
+            transform: none;
+            background: rgba(255, 140, 0, 0.06);
+            border-color: rgba(255, 140, 0, 0.15);
+        }
+
+        html.hover-off .ground-nut:hover {
+            transform: none;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -1194,6 +1647,31 @@
             }
 
             .prize-content { text-align: center; }
+
+            .falling-nut, .ground-nut {
+                width: 40px;
+                height: 40px;
+            }
+
+            .nut-shadow {
+                width: 30px;
+                height: 6px;
+            }
+
+            .collection-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 10px;
+            }
+
+            .nut-card {
+                padding: 12px 8px;
+                min-height: 140px;
+            }
+
+            .nut-card-img {
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
 </head>
@@ -1243,6 +1721,7 @@
 
         <section id="event">
             <div class="falling-leaves" id="fallingLeaves"></div>
+            <div class="falling-nuts-container" id="fallingNutsContainer"></div>
             <div class="event-content">
                 <h2 class="section-title reveal">🍂 Осеннее событие</h2>
 
@@ -1264,6 +1743,26 @@
                         <div class="timer-value" id="timerSeconds">00</div>
                         <div class="timer-label">секунд</div>
                     </div>
+                </div>
+
+                <div class="nuts-section reveal" id="nutsSection">
+                    <h3>🌰 Греческие орехи</h3>
+                    <p class="nuts-subtitle" id="nutsSubtitle">Собирайте 16 уникальных орехов, которые падают каждые 3 минуты. Соберите всю коллекцию!</p>
+
+                    <div class="nuts-progress-wrap">
+                        <span class="nuts-progress-text" id="nutsProgressText">0 / 16</span>
+                        <div class="nuts-progress-bar-bg">
+                            <div class="nuts-progress-bar-fill" id="nutsProgressBar" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <button class="nuts-open-btn" id="nutsOpenBtn" onclick="openCollection()">
+                        <span>🌰</span>
+                        <span id="nutsBtnText">Открыть коллекцию</span>
+                    </button>
+
+                    <div class="nuts-countdown" id="nutsCountdown"></div>
+                    <div class="nuts-archive-msg" id="nutsArchiveMsg" style="display:none">📦 Коллекция сохранена как архив. Орехи больше не падают, но ваши находки остались с вами.</div>
                 </div>
 
                 <div class="challenges-grid reveal">
@@ -1355,7 +1854,9 @@
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal" id="modal">
             <button class="modal-close" onclick="closeModal()">✕</button>
-            <div id="modalContent"></div>
+            <div class="modal-scroll" id="modalScroll">
+                <div id="modalContent"></div>
+            </div>
         </div>
     </div>
 
@@ -1480,7 +1981,7 @@
             const container = document.getElementById('fallingLeaves');
             leavesBox.w = container.clientWidth;
             leavesBox.h = container.clientHeight;
-            const emojis = ['🍂', '🍁', ''];
+            const emojis = ['🍂', '', ''];
             for (let i = 0; i < 25; i++) {
                 const el = document.createElement('div');
                 el.className = 'leaf';
@@ -1846,11 +2347,19 @@
             if (num === 1) renderPuzzle(modalContent);
             else if (num === 2) renderBattery(modalContent);
             else if (num === 3) renderStraws(modalContent);
+            document.getElementById('modalScroll').scrollTop = 0;
             document.getElementById('modalOverlay').classList.add('active');
         }
 
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function animateModalContent() {
+            const content = document.getElementById('modalContent');
+            content.classList.remove('content-swap');
+            void content.offsetWidth;
+            content.classList.add('content-swap');
         }
 
         function openHowItWorks() {
@@ -1872,6 +2381,7 @@
                     </div>
                 </div>
             `;
+            document.getElementById('modalScroll').scrollTop = 0;
             document.getElementById('modalOverlay').classList.add('active');
         }
 
@@ -2398,9 +2908,542 @@
             document.getElementById('timerSeconds').textContent = String(seconds).padStart(2, '0');
         }
 
+        const NUT_EVENT_START = new Date('2026-10-01T00:00:00');
+        const NUT_EVENT_END = new Date('2026-11-01T00:00:00');
+        const NUT_SPAWN_INTERVAL = 180000;
+        const NUT_LIFETIME = 600000;
+        const NUT_MAX_ON_GROUND = 3;
+
+        function makeNutSVG(variant) {
+            const base = (shellColor, coreColor, extras = '') => `
+                <svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="g${variant}" cx="35%" cy="30%">
+                            <stop offset="0%" stop-color="${coreColor}"/>
+                            <stop offset="100%" stop-color="${shellColor}"/>
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="30" cy="32" rx="22" ry="24" fill="url(#g${variant})" stroke="${shellColor}" stroke-width="1"/>
+                    <path d="M 30 10 Q 28 32 30 54" stroke="rgba(0,0,0,0.25)" stroke-width="1.2" fill="none"/>
+                    <path d="M 15 20 Q 30 28 45 20" stroke="rgba(0,0,0,0.2)" stroke-width="0.8" fill="none"/>
+                    <path d="M 14 35 Q 30 42 46 35" stroke="rgba(0,0,0,0.2)" stroke-width="0.8" fill="none"/>
+                    <path d="M 18 48 Q 30 52 42 48" stroke="rgba(0,0,0,0.2)" stroke-width="0.8" fill="none"/>
+                    <ellipse cx="22" cy="20" rx="6" ry="10" fill="rgba(255,255,255,0.25)" transform="rotate(-20 22 20)"/>
+                    ${extras}
+                </svg>`;
+
+            switch (variant) {
+                case 0: return base('#8b6914', '#d4a017');
+                case 1: return base('#6b4e0f', '#b8860b',
+                    '<path d="M 25 12 L 28 25 L 26 38 L 30 48" stroke="rgba(0,0,0,0.5)" stroke-width="1.5" fill="none"/>');
+                case 2: return base('#a67c2e', '#d4a017');
+                case 3: return base('#5c3d0a', '#8b6914',
+                    '<path d="M 20 15 Q 22 32 20 50" stroke="rgba(0,0,0,0.35)" stroke-width="0.8" fill="none"/>' +
+                    '<path d="M 40 15 Q 38 32 40 50" stroke="rgba(0,0,0,0.35)" stroke-width="0.8" fill="none"/>');
+                case 4: return base('#8b6914', '#d4a017',
+                    '<ellipse cx="35" cy="38" rx="5" ry="4" fill="rgba(60,30,0,0.5)"/>');
+                case 5: return base('#7a5510', '#c49620');
+                case 6: return base('#8b6914', '#d4a017',
+                    '<path d="M 30 10 L 30 54" stroke="rgba(0,0,0,0.4)" stroke-width="2" fill="none"/>');
+                case 7: return base('#9c7419', '#d4a017');
+                case 8: return base('#8b6914', '#d4a017',
+                    '<path d="M 30 8 Q 32 4 35 2" stroke="#5c3d0a" stroke-width="2" fill="none"/>' +
+                    '<circle cx="35" cy="2" r="1.5" fill="#5c3d0a"/>');
+                case 9: return base('#6b4e0f', '#b8860b');
+                case 10: return base('#ffd700', '#fff8b0',
+                    '<ellipse cx="22" cy="22" rx="8" ry="12" fill="rgba(255,255,255,0.5)" transform="rotate(-20 22 22)"/>');
+                case 11: return base('#c0c0c0', '#f0f0f0',
+                    '<ellipse cx="22" cy="22" rx="8" ry="12" fill="rgba(255,255,255,0.6)" transform="rotate(-20 22 22)"/>');
+                case 12: return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="rainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ff6b6b"/>
+                            <stop offset="25%" stop-color="#ffd93d"/>
+                            <stop offset="50%" stop-color="#6bcf7f"/>
+                            <stop offset="75%" stop-color="#4d96ff"/>
+                            <stop offset="100%" stop-color="#b482ff"/>
+                        </linearGradient>
+                    </defs>
+                    <ellipse cx="30" cy="32" rx="22" ry="24" fill="url(#rainbow)" stroke="#b482ff" stroke-width="1.5"/>
+                    <path d="M 30 10 Q 28 32 30 54" stroke="rgba(255,255,255,0.4)" stroke-width="1" fill="none"/>
+                    <ellipse cx="22" cy="22" rx="7" ry="11" fill="rgba(255,255,255,0.45)" transform="rotate(-20 22 22)"/>
+                </svg>`;
+                case 13: return base('#8b0000', '#ff4444',
+                    '<circle cx="30" cy="32" r="5" fill="#ff1744" stroke="#fff" stroke-width="1"/>');
+                case 14: return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="azure" cx="35%" cy="30%">
+                            <stop offset="0%" stop-color="#e0c3fc"/>
+                            <stop offset="50%" stop-color="#8ec5fc"/>
+                            <stop offset="100%" stop-color="#4a5fd6"/>
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="30" cy="32" rx="22" ry="24" fill="url(#azure)" stroke="#8ec5fc" stroke-width="1.5"/>
+                    <path d="M 30 10 Q 28 32 30 54" stroke="rgba(255,255,255,0.5)" stroke-width="1" fill="none"/>
+                    <ellipse cx="22" cy="22" rx="7" ry="11" fill="rgba(255,255,255,0.5)" transform="rotate(-20 22 22)"/>
+                    <text x="20" y="20" font-size="6" fill="#fff">✦</text>
+                    <text x="38" y="30" font-size="5" fill="#fff">✦</text>
+                    <text x="25" y="42" font-size="5" fill="#fff">✦</text>
+                </svg>`;
+                case 15: return `<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="sunset" cx="35%" cy="30%">
+                            <stop offset="0%" stop-color="#fff4a3"/>
+                            <stop offset="35%" stop-color="#ffb347"/>
+                            <stop offset="70%" stop-color="#ff5e62"/>
+                            <stop offset="100%" stop-color="#6a1b3d"/>
+                        </radialGradient>
+                    </defs>
+                    <ellipse cx="30" cy="32" rx="22" ry="24" fill="url(#sunset)" stroke="#8b2c4a" stroke-width="1.5"/>
+                    <path d="M 30 10 Q 28 32 30 54" stroke="rgba(255,255,255,0.35)" stroke-width="1" fill="none"/>
+                    <ellipse cx="22" cy="22" rx="7" ry="11" fill="rgba(255,255,255,0.45)" transform="rotate(-20 22 22)"/>
+                    <circle cx="32" cy="30" r="4" fill="#fff8c7" opacity="0.85"/>
+                    <circle cx="32" cy="30" r="6" fill="#fff8c7" opacity="0.2"/>
+                    <path d="M 12 42 Q 30 46 48 42" stroke="rgba(255,255,255,0.2)" stroke-width="0.8" fill="none"/>
+                </svg>`;
+            }
+        }
+
+        const NUTS = [
+            { id: 0, name: "Простой орех", rarity: "common", weight: 707, desc: "Обычный грецкий орех. Вкусный и питательный, классика осеннего леса." },
+            { id: 1, name: "Треснувший", rarity: "common", weight: 707, desc: "Орех с характерной трещиной поперёк скорлупы. Видно, что многое повидал." },
+            { id: 2, name: "Светлый малыш", rarity: "common", weight: 707, desc: "Мелкий орех светлого оттенка. Компактный, но такой же вкусный." },
+            { id: 3, name: "Тёмный старик", rarity: "common", weight: 707, desc: "Крупный тёмный орех с глубокими бороздками. Настоящий ветеран леса." },
+            { id: 4, name: "Пятнистый", rarity: "common", weight: 707, desc: "Орех с тёмным пятном на скорлупе. Уникальный рисунок от природы." },
+            { id: 5, name: "Продолговатый", rarity: "common", weight: 707, desc: "Вытянутая форма — редкость среди грецких орехов. Элегантный." },
+            { id: 6, name: "Двустворчатый", rarity: "common", weight: 707, desc: "Скорлупа разошлась на две половинки, но ядро осталось целым." },
+            { id: 7, name: "Орешек", rarity: "common", weight: 707, desc: "Самый маленький в коллекции. Идеален как брелок на удачу." },
+            { id: 8, name: "С веточкой", rarity: "common", weight: 707, desc: "Орех с остатком черешка — видно, что недавно упал с дерева." },
+            { id: 9, name: "Приплюснутый", rarity: "common", weight: 707, desc: "Необычно плоский орех. Наверное, кто-то уже сидел на нём." },
+            { id: 10, name: "Золотой орех", rarity: "rare", weight: 705, desc: "Скорлупа отливает чистым золотом. Говорят, приносит удачу." },
+            { id: 11, name: "Серебряный орех", rarity: "rare", weight: 705, desc: "Холодный серебряный блеск скорлупы. Редкий природный феномен." },
+            { id: 12, name: "Радужный орех", rarity: "rare", weight: 705, desc: "Переливается всеми цветами радуги. Настоящее чудо осени." },
+            { id: 13, name: "Орех с рубином", rarity: "rare", weight: 705, desc: "Внутри скорлупы врос настоящий рубин. Легендарная находка." },
+            { id: 14, name: "Лазурный орех", rarity: "legendary", weight: 55, desc: "Небесно-голубой орех со звёздами. Легенда гласит, что в году рождается только один." },
+            { id: 15, name: "Закат", rarity: "legendary", weight: 55, desc: "Орех цвета заходящего солнца — от золотого до пурпурного. Говорят, находит того, кто умеет смотреть на небо." }
+        ];
+
+        const NUT_TOTAL_WEIGHT = NUTS.reduce((s, n) => s + n.weight, 0);
+
+        function nutChancePercent(nut) {
+            return (nut.weight / NUT_TOTAL_WEIGHT * 100).toFixed(2).replace('.', ',');
+        }
+
+        NUTS.forEach(n => { n.svg = makeNutSVG(n.id); });
+
+        let collectedNuts = new Set();
+        let nutPickCounts = {};
+        try {
+            const saved = JSON.parse(localStorage.getItem('dany_nut_collection') || '[]');
+            collectedNuts = new Set(saved);
+        } catch (e) {}
+        try {
+            nutPickCounts = JSON.parse(localStorage.getItem('dany_nut_picks') || '{}');
+        } catch (e) {}
+
+        function saveCollection() {
+            localStorage.setItem('dany_nut_collection', JSON.stringify([...collectedNuts]));
+        }
+
+        function savePickCounts() {
+            localStorage.setItem('dany_nut_picks', JSON.stringify(nutPickCounts));
+        }
+
+        function updateNutsUI() {
+            const count = collectedNuts.size;
+            document.getElementById('nutsProgressText').textContent = `${count} / 16`;
+            document.getElementById('nutsProgressBar').style.width = `${(count / 16) * 100}%`;
+        }
+
+        const nutsContainer = document.getElementById('fallingNutsContainer');
+        const fallingNuts = [];
+        const groundNuts = [];
+        let lastActivityTime = Date.now();
+        let lastSpawnCheck = Date.now();
+        let lastNutT = 0;
+        const nutsBox = { w: 0, h: 0 };
+        let collectionScrollTop = 0;
+
+        function updateNutsBox() {
+            const container = document.getElementById('fallingNutsContainer');
+            nutsBox.w = container.clientWidth;
+            nutsBox.h = container.clientHeight;
+        }
+
+        function isNutEventActive() {
+            const now = Date.now();
+            return now >= NUT_EVENT_START.getTime() && now < NUT_EVENT_END.getTime();
+        }
+
+        function isNutEventArchived() {
+            return Date.now() >= NUT_EVENT_END.getTime();
+        }
+
+        function pickRandomNut() {
+            const available = NUTS.filter(n => (nutPickCounts[n.id] || 0) < 2);
+            if (available.length === 0) return null;
+
+            const totalWeight = available.reduce((s, n) => s + n.weight, 0);
+            let r = Math.random() * totalWeight;
+            for (const n of available) {
+                r -= n.weight;
+                if (r <= 0) return n;
+            }
+            return available[0];
+        }
+
+        function createGroundNutStructure(svg, rarity) {
+            const wrap = document.createElement('div');
+            const shadow = document.createElement('div');
+            shadow.className = 'nut-shadow';
+            const inner = document.createElement('div');
+            inner.className = 'nut-inner';
+            inner.innerHTML = svg;
+            wrap.appendChild(shadow);
+            wrap.appendChild(inner);
+            return wrap;
+        }
+
+        function spawnNut() {
+            if (!isNutEventActive()) return;
+            if (groundNuts.length >= NUT_MAX_ON_GROUND) return;
+
+            updateNutsBox();
+            const nut = pickRandomNut();
+            if (!nut) return;
+
+            const W = nutsBox.w;
+            const H = nutsBox.h;
+            const size = window.innerWidth <= 768 ? 40 : 50;
+
+            const margin = 50;
+            const baseX = margin + Math.random() * Math.max(margin * 2, W - margin * 2 - size);
+            const targetY = H - size - 20 - Math.random() * 30;
+
+            const el = document.createElement('div');
+            el.className = `falling-nut`;
+            el.innerHTML = nut.svg;
+            el.style.width = `${size}px`;
+            el.style.height = `${size}px`;
+            nutsContainer.appendChild(el);
+
+            const nutObj = {
+                el: el,
+                baseX: baseX,
+                y: -80 - Math.random() * 60,
+                targetY: targetY,
+                speed: 80 + Math.random() * 50,
+                swayAmp: 20 + Math.random() * 40,
+                swaySpeed: 0.0003 + Math.random() * 0.0005,
+                phase: Math.random() * Math.PI * 2,
+                rot: Math.random() * 360,
+                rotSpeed: (Math.random() - 0.5) * 0.25,
+                nutId: nut.id,
+                rarity: nut.rarity,
+                svg: nut.svg,
+                size: size,
+                landed: false,
+                spawnTime: Date.now(),
+                visibleMs: 0
+            };
+
+            fallingNuts.push(nutObj);
+        }
+
+        function spawnLeafBurst(cx, cy, rarity) {
+            const leafCount = 5 + Math.floor(Math.random() * 3);
+            const leafClass = rarity === 'legendary' ? 'legendary-leaf' : (rarity === 'rare' ? 'golden' : '');
+            const leafEmojis = rarity === 'legendary' ? ['✨', '⭐', '💫', '🌟'] :
+                                (rarity === 'rare' ? ['🍁', '', '🍂', '🍃'] : ['🍂', '', '']);
+
+            for (let i = 0; i < leafCount; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = `leaf-burst ${leafClass}`;
+                leaf.textContent = leafEmojis[Math.floor(Math.random() * leafEmojis.length)];
+                const angle = (Math.PI * 2 * i) / leafCount + Math.random() * 0.5;
+                const dist = 60 + Math.random() * 50;
+                leaf.style.setProperty('--bx', `${Math.cos(angle) * dist}px`);
+                leaf.style.setProperty('--by', `${Math.sin(angle) * dist}px`);
+                leaf.style.setProperty('--br', `${Math.random() * 720}deg`);
+                leaf.style.left = `${cx}px`;
+                leaf.style.top = `${cy}px`;
+                nutsContainer.appendChild(leaf);
+                leaf.addEventListener('animationend', () => leaf.remove());
+            }
+        }
+
+        function tickNuts(t) {
+            const dt = lastNutT ? Math.min(50, t - lastNutT) : 16;
+            lastNutT = t;
+
+            for (let i = fallingNuts.length - 1; i >= 0; i--) {
+                const n = fallingNuts[i];
+                n.y += n.speed * dt / 1000;
+                n.rot += n.rotSpeed * dt;
+
+                if (n.y >= n.targetY) {
+                    n.y = n.targetY;
+                    const dx = Math.sin(t * n.swaySpeed + n.phase) * n.swayAmp;
+                    const finalX = n.baseX + dx;
+                    const finalRot = n.rot % 360;
+
+                    const oldEl = n.el;
+                    const groundEl = document.createElement('div');
+                    groundEl.className = `ground-nut ${n.rarity}`;
+                    groundEl.style.width = `${n.size}px`;
+                    groundEl.style.height = `${n.size}px`;
+                    groundEl.style.left = finalX + 'px';
+                    groundEl.style.top = n.targetY + 'px';
+                    groundEl.style.setProperty('--rot', finalRot.toFixed(1) + 'deg');
+
+                    const structure = createGroundNutStructure(n.svg, n.rarity);
+                    while (structure.firstChild) {
+                        groundEl.appendChild(structure.firstChild);
+                    }
+
+                    groundEl.onclick = () => collectNut(n.nutId, groundEl, n);
+                    n.el = groundEl;
+                    nutsContainer.appendChild(groundEl);
+                    oldEl.remove();
+
+                    n.landed = true;
+                    groundNuts.push(n);
+                    fallingNuts.splice(i, 1);
+                    spawnLeafBurst(finalX + n.size / 2, n.targetY + n.size / 2, n.rarity);
+                    continue;
+                }
+
+                const dx = Math.sin(t * n.swaySpeed + n.phase) * n.swayAmp;
+                n.el.style.left = (n.baseX + dx) + 'px';
+                n.el.style.top = n.y + 'px';
+                n.el.style.transform = `rotate(${n.rot.toFixed(1)}deg)`;
+                const fadeIn = Math.min(1, Math.max(0, n.y + 80) / 100);
+                n.el.style.opacity = fadeIn.toFixed(3);
+            }
+
+            requestAnimationFrame(tickNuts);
+        }
+
+        function collectNut(nutId, el, nutObj) {
+            const nut = NUTS[nutId];
+            const wasNew = !collectedNuts.has(nutId);
+
+            el.classList.add('collecting');
+            el.onclick = null;
+
+            const idx = groundNuts.findIndex(r => r === nutObj);
+            if (idx >= 0) groundNuts.splice(idx, 1);
+
+            const inner = el.querySelector('.nut-inner');
+            const removeAfter = () => el.remove();
+            if (inner) {
+                inner.addEventListener('animationend', removeAfter, { once: true });
+            } else {
+                setTimeout(removeAfter, 700);
+            }
+
+            nutPickCounts[nutId] = (nutPickCounts[nutId] || 0) + 1;
+            savePickCounts();
+
+            if (wasNew) {
+                collectedNuts.add(nutId);
+                saveCollection();
+                updateNutsUI();
+                showToast(`✨ Собран: ${nut.name}`, nut.rarity);
+            } else {
+                showToast(`🌰 Дубликат: ${nut.name}`, nut.rarity);
+            }
+        }
+
+        function showToast(text, rarity) {
+            const toast = document.createElement('div');
+            toast.className = `collect-toast ${rarity === 'legendary' ? 'legendary' : (rarity === 'rare' ? 'rare' : '')}`;
+            toast.textContent = text;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('out');
+                setTimeout(() => toast.remove(), 400);
+            }, 2500);
+        }
+
+        function removeExpiredNuts() {
+            for (let i = groundNuts.length - 1; i >= 0; i--) {
+                const n = groundNuts[i];
+                if (n.visibleMs >= NUT_LIFETIME) {
+                    n.el.classList.add('fading');
+                    const el = n.el;
+                    const inner = el.querySelector('.nut-inner');
+                    const removeAfter = () => el.remove();
+                    if (inner) {
+                        inner.addEventListener('animationend', removeAfter, { once: true });
+                    } else {
+                        setTimeout(removeAfter, 800);
+                    }
+                    groundNuts.splice(i, 1);
+                }
+            }
+        }
+
+        ['mousemove', 'scroll', 'keydown', 'touchstart', 'click'].forEach(evt => {
+            window.addEventListener(evt, () => { lastActivityTime = Date.now(); }, { passive: true });
+        });
+
+        setInterval(() => {
+            const now = Date.now();
+
+            if (now - lastActivityTime < 2000) {
+                for (const n of groundNuts) {
+                    n.visibleMs += 1000;
+                }
+            }
+
+            if (now - lastSpawnCheck >= NUT_SPAWN_INTERVAL) {
+                lastSpawnCheck = now;
+                if (isNutEventActive()) {
+                    spawnNut();
+                }
+            }
+
+            removeExpiredNuts();
+            updateNutsCountdown();
+        }, 1000);
+
+        window.addEventListener('resize', () => {
+            updateNutsBox();
+            for (const n of fallingNuts) {
+                n.baseX = Math.min(Math.max(n.baseX, 50), Math.max(50, nutsBox.w - 50 - n.size));
+                n.targetY = Math.min(n.targetY, nutsBox.h - n.size - 20);
+            }
+            for (const n of groundNuts) {
+                n.baseX = Math.min(Math.max(n.baseX, 50), Math.max(50, nutsBox.w - 50 - n.size));
+                n.targetY = Math.min(n.targetY, nutsBox.h - n.size - 20);
+            }
+        });
+
+        function updateNutsCountdown() {
+            const el = document.getElementById('nutsCountdown');
+            const archiveMsg = document.getElementById('nutsArchiveMsg');
+            const btn = document.getElementById('nutsOpenBtn');
+            const btnText = document.getElementById('nutsBtnText');
+            const subtitle = document.getElementById('nutsSubtitle');
+
+            if (isNutEventArchived()) {
+                el.style.display = 'none';
+                archiveMsg.style.display = 'block';
+                btn.classList.add('archive');
+                btnText.textContent = 'Открыть архив коллекции';
+                subtitle.textContent = 'Событие завершено, но ваша коллекция орехов сохранена навсегда.';
+                return;
+            }
+
+            if (!isNutEventActive()) {
+                const diff = NUT_EVENT_START.getTime() - Date.now();
+                if (diff > 0) {
+                    el.style.display = 'block';
+                    el.textContent = `Орехи начнут падать через: ${formatTimeDiff(diff)}`;
+                    btn.style.display = 'none';
+                    subtitle.textContent = 'Событие с греческими орехами скоро начнётся!';
+                }
+                return;
+            }
+
+            const diff = NUT_EVENT_END.getTime() - Date.now();
+            el.style.display = 'block';
+            el.textContent = `Орехи будут падать ещё: ${formatTimeDiff(diff)}`;
+            btn.style.display = 'inline-flex';
+            btn.classList.remove('archive');
+            btnText.textContent = 'Открыть коллекцию';
+            subtitle.textContent = 'Собирайте 16 уникальных орехов, которые падают каждые 3 минуты. Соберите всю коллекцию!';
+        }
+
+        function formatTimeDiff(ms) {
+            if (ms <= 0) return '00:00:00:00';
+            const days = Math.floor(ms / 86400000);
+            const hours = Math.floor((ms / 3600000) % 24);
+            const minutes = Math.floor((ms / 60000) % 60);
+            const seconds = Math.floor((ms / 1000) % 60);
+            return `${String(days).padStart(2,'0')}д ${String(hours).padStart(2,'0')}ч ${String(minutes).padStart(2,'0')}м ${String(seconds).padStart(2,'0')}с`;
+        }
+
+        function openCollection(restoreScroll) {
+            const modalContent = document.getElementById('modalContent');
+            const modalScroll = document.getElementById('modalScroll');
+            const count = collectedNuts.size;
+            const isArchived = isNutEventArchived();
+
+            let html = `<h2 class="modal-title">🌰 ${isArchived ? 'Архив коллекции' : 'Коллекция орехов'}</h2>`;
+            html += `<p style="text-align:center;color:var(--text-secondary);margin-bottom:20px;font-size:0.9rem;">Собрано: ${count} / 16</p>`;
+            html += `<div class="collection-grid">`;
+
+            NUTS.forEach(nut => {
+                const has = collectedNuts.has(nut.id);
+                const pickCount = nutPickCounts[nut.id] || 0;
+                const rarityLabel = nut.rarity === 'legendary' ? 'Легендарный' : (nut.rarity === 'rare' ? 'Редкий' : 'Обычный');
+                html += `
+                    <div class="nut-card ${nut.rarity} ${has ? '' : 'locked'}" onclick="${has ? `showNutDetail(${nut.id})` : ''}">
+                        <div class="nut-card-img">
+                            ${has ? nut.svg : '<div class="question">?</div>'}
+                        </div>
+                        <div class="nut-card-name">${has ? nut.name : '???'}</div>
+                        <span class="nut-card-rarity ${nut.rarity}">${rarityLabel}</span>
+                        <div class="nut-card-chance">шанс: ≈${nutChancePercent(nut)}%</div>
+                        ${has && pickCount > 1 ? `<div style="font-size:0.7rem;color:var(--text-secondary);margin-top:2px;">×${pickCount}</div>` : ''}
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+
+            if (count === 16) {
+                html += `<div style="text-align:center;margin-top:25px;padding:20px;background:rgba(76,175,80,0.1);border:1px solid rgba(76,175,80,0.4);border-radius:14px;">
+                    <div style="font-size:2rem;margin-bottom:10px;">🏆</div>
+                    <div style="font-weight:700;color:#4caf50;margin-bottom:6px;">Коллекция собрана!</div>
+                    <div style="color:var(--text-secondary);font-size:0.85rem;">Поздравляем! Вы нашли все 16 уникальных орехов.</div>
+                </div>`;
+            }
+
+            modalContent.innerHTML = html;
+            modalScroll.scrollTop = restoreScroll ? collectionScrollTop : 0;
+            if (!restoreScroll) collectionScrollTop = 0;
+            animateModalContent();
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function showNutDetail(nutId) {
+            const nut = NUTS[nutId];
+            const rarityLabel = nut.rarity === 'legendary' ? 'Легендарный' : (nut.rarity === 'rare' ? 'Редкий' : 'Обычный');
+            const pickCount = nutPickCounts[nutId] || 0;
+            const exhausted = pickCount >= 2;
+            const modalScroll = document.getElementById('modalScroll');
+
+            collectionScrollTop = modalScroll.scrollTop;
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <div class="nut-detail">
+                    <div class="nut-detail-img">${nut.svg}</div>
+                    <div class="nut-detail-name">${nut.name}</div>
+                    <div class="nut-detail-rarity">
+                        <span class="nut-card-rarity ${nut.rarity}">${rarityLabel}</span>
+                    </div>
+                    <div style="text-align:center;margin-bottom:12px;font-size:0.8rem;color:var(--text-secondary);">
+                        Шанс выпадения: ≈${nutChancePercent(nut)}% за спавн${exhausted ? ' • больше не выпадает (собран максимум)' : ''}
+                    </div>
+                    ${pickCount > 1 ? `<div style="text-align:center;margin-bottom:10px;font-size:0.85rem;color:var(--text-secondary);">Подобрано: ${pickCount} раза</div>` : ''}
+                    <div class="nut-detail-desc">${nut.desc}</div>
+                    <div style="text-align:center;margin-top:25px;">
+                        <button class="nuts-open-btn" onclick="openCollection(true)" style="padding:10px 24px;font-size:0.9rem;">← Назад к коллекции</button>
+                    </div>
+                </div>
+            `;
+            modalScroll.scrollTop = 0;
+            animateModalContent();
+        }
+
         function init() {
             createBgDots();
             createFallingLeaves();
+            updateNutsBox();
             renderPublications();
             renderSocialLinks();
             updateCodeParts();
@@ -2408,7 +3451,10 @@
             updatePrizeCards();
             updatePrizeBanner();
             updateTimer();
+            updateNutsUI();
+            updateNutsCountdown();
             setInterval(updateTimer, 1000);
+            requestAnimationFrame(tickNuts);
 
             if (localStorage.getItem('event_activated') === 'true') {
                 codeInput.value = FULL_CODE;
