@@ -936,6 +936,8 @@
         .code-part.locked {
             filter: blur(6px);
             user-select: none;
+            -webkit-user-select: none;
+            pointer-events: none;
             color: rgba(255, 255, 255, 0.2);
         }
 
@@ -1799,9 +1801,9 @@
                 <div class="code-section reveal">
                     <h3>Введите полный код</h3>
                     <div class="code-parts" id="codeParts">
-                        <span class="code-part locked" id="part1">RDC9</span>
-                        <span class="code-part locked" id="part2">M0F4</span>
-                        <span class="code-part locked" id="part3">G7FALL</span>
+                        <span class="code-part locked" id="part1" aria-hidden="true">••••</span>
+                        <span class="code-part locked" id="part2" aria-hidden="true">••••</span>
+                        <span class="code-part locked" id="part3" aria-hidden="true">••••••</span>
                     </div>
                     <div class="code-input-wrap">
                         <input type="text" class="code-input" id="codeInput" placeholder="••••••••••••••" maxlength="14" autocomplete="off" spellcheck="false">
@@ -2271,28 +2273,34 @@
             if (p1) {
                 el1.textContent = p1;
                 el1.className = 'code-part unlocked';
+                el1.removeAttribute('aria-hidden');
                 document.getElementById('challenge1').classList.add('solved');
             } else {
-                el1.textContent = 'RDC9';
+                el1.textContent = '••••';
                 el1.className = 'code-part locked';
+                el1.setAttribute('aria-hidden', 'true');
             }
 
             if (p2) {
                 el2.textContent = p2;
                 el2.className = 'code-part unlocked';
+                el2.removeAttribute('aria-hidden');
                 document.getElementById('challenge2').classList.add('solved');
             } else {
-                el2.textContent = 'M0F4';
+                el2.textContent = '••••';
                 el2.className = 'code-part locked';
+                el2.setAttribute('aria-hidden', 'true');
             }
 
             if (p3) {
                 el3.textContent = p3;
                 el3.className = 'code-part unlocked';
+                el3.removeAttribute('aria-hidden');
                 document.getElementById('challenge3').classList.add('solved');
             } else {
-                el3.textContent = 'G7FALL';
+                el3.textContent = '••••••';
                 el3.className = 'code-part locked';
+                el3.setAttribute('aria-hidden', 'true');
             }
 
             updatePlaceholder();
