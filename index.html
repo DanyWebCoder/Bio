@@ -1887,7 +1887,7 @@
         const SECOND_MECTO = true;
         const THIRD_MECTO = true;
 
-        const FULL_CODE = 'RDC9M0F4G7FALL';
+        const FULL_CODE = 'A7X2K9P4Q3FALL';
         const EVENT_END_DATE = new Date('2026-11-20T00:00:00');
         const CHALLENGE_OPEN_DATES = {
             1: new Date('2026-09-01T00:00:00'),
@@ -2313,13 +2313,13 @@
             const p3 = getSavedPart(3);
 
             let placeholder = '';
-            if (p1) placeholder += 'RDC9';
+            if (p1) placeholder += 'A7X2';
             else placeholder += '••••';
 
-            if (p2) placeholder += 'M0F4';
+            if (p2) placeholder += 'K9P4';
             else placeholder += '••••';
 
-            if (p3) placeholder += 'G7FALL';
+            if (p3) placeholder += 'Q3FALL';
             else placeholder += '••••••';
 
             input.placeholder = placeholder;
@@ -2466,9 +2466,9 @@
             if (puzzleState.join(',') === '1,2,3,4,5,6,7,8,0') {
                 puzzleWon = true;
                 const statusEl = document.getElementById('puzzleStatus');
-                statusEl.textContent = '✅ Победа! Код: RDC9';
+                statusEl.textContent = '✅ Победа! Код: A7X2';
                 statusEl.style.color = '#4caf50';
-                savePart(1, 'RDC9');
+                savePart(1, 'A7X2');
                 setTimeout(closeModal, 1500);
             }
         }
@@ -2651,10 +2651,10 @@
                 pipeWon = true;
                 const statusEl = document.getElementById('batteryStatus');
                 if (statusEl) {
-                    statusEl.textContent = '✅ Путь создан! Код: M0F4';
+                    statusEl.textContent = '✅ Путь создан! Код: K9P4';
                     statusEl.style.color = '#4caf50';
                 }
-                savePart(2, 'M0F4');
+                savePart(2, 'K9P4');
                 setTimeout(closeModal, 1500);
             }
         }
@@ -2741,9 +2741,9 @@
                 straw.hidden = true;
                 strawGameWon = true;
                 const statusEl = document.getElementById('strawStatus');
-                statusEl.textContent = '✅ Вы нашли иголку! Код: G7FALL';
+                statusEl.textContent = '✅ Вы нашли иголку! Код: Q3FALL';
                 statusEl.style.color = '#4caf50';
-                savePart(3, 'G7FALL');
+                savePart(3, 'Q3FALL');
                 renderCurrentStrawLayer();
                 setTimeout(closeModal, 1500);
                 return;
