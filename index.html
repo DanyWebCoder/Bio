@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Моё цифровое пространство - публикации, проекты и связь со мной в одном месте.">
     <title>Dany's сайт-хаб</title>
+    <link rel="stylesheet" href="./design.css">
     <style>
         * {
             margin: 0;
@@ -18,13 +19,13 @@
             --accent-glow: rgba(59, 130, 246, 0.25);
             --dark-bg: #060a14;
             --text-primary: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.55);
+            --text-secondary: rgba(255, 255, 255, 0.58);
             --plus-color: #ff8c00;
             --plus-glow: rgba(255, 140, 0, 0.35);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 'Segoe UI', Roboto, sans-serif;
             background: var(--dark-bg);
             color: var(--text-primary);
             min-height: 100vh;
@@ -32,23 +33,36 @@
             position: relative;
         }
 
-        .bg-dots {
+        .bg-ambient {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            height: 100lvh;
             pointer-events: none;
             z-index: 0;
+            background:
+                radial-gradient(ellipse 60% 40% at 18% 16%, rgba(37, 99, 235, 0.09), transparent 65%),
+                radial-gradient(ellipse 50% 40% at 82% 78%, rgba(59, 130, 246, 0.07), transparent 65%);
+            transition: background 0.6s ease;
         }
 
-        .bg-dot {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: var(--accent);
-            border-radius: 50%;
-            opacity: 0.3;
+        body.plus-active .bg-ambient {
+            background:
+                radial-gradient(ellipse 60% 40% at 18% 16%, rgba(255, 140, 0, 0.09), transparent 65%),
+                radial-gradient(ellipse 50% 40% at 82% 78%, rgba(59, 130, 246, 0.07), transparent 65%);
+        }
+
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            height: 100lvh;
+            pointer-events: none;
+            z-index: 0;
         }
 
         header {
@@ -63,25 +77,18 @@
         }
 
         .logo {
-            font-size: 1.15rem;
+            font-size: 1.12rem;
             font-weight: 600;
             text-decoration: none;
             white-space: nowrap;
-            padding: 12px 25px;
-            background: rgba(59, 130, 246, 0.06);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 50px;
+            padding: 11px 22px;
+            background: var(--lg-tint-btn);
+            border-radius: 999px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            transition: transform 0.25s ease, background 0.25s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-            background: rgba(59, 130, 246, 0.1);
+            gap: 8px;
+            cursor: grab;
+            color: var(--text-primary);
         }
 
         .logo-blue {
@@ -89,9 +96,7 @@
             text-shadow: 0 0 12px var(--accent-glow);
         }
 
-        .logo-white {
-            color: var(--text-primary);
-        }
+        .logo-white { color: var(--text-primary); }
 
         .logo-plus {
             display: none;
@@ -106,9 +111,7 @@
             animation: plusGlow 2.5s ease-in-out infinite;
         }
 
-        body.plus-active .logo-plus {
-            display: inline-block;
-        }
+        body.plus-active .logo-plus { display: inline-block; }
 
         @keyframes plusGlow {
             0%, 100% { filter: drop-shadow(0 0 6px rgba(255, 140, 0, 0.6)); }
@@ -118,50 +121,37 @@
         nav {
             position: relative;
             display: flex;
-            gap: 22px;
+            gap: 6px;
             align-items: center;
-            padding: 12px 22px;
-            background: rgba(59, 130, 246, 0.06);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(59, 130, 246, 0.15);
-            border-radius: 35px;
-            overflow: hidden;
+            padding: 5px;
+            border-radius: 999px;
             max-width: 95%;
+            touch-action: none;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.42), 0 0 18px rgba(59, 130, 246, 0.10);
         }
 
         nav a {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.92rem;
-            padding: 8px 14px;
-            border-radius: 35px;
+            font-weight: 500;
+            padding: 9px 17px;
+            border-radius: 999px;
             position: relative;
-            z-index: 2;
+            z-index: 4;
             white-space: nowrap;
-            transition: color 0.25s ease;
+            transition: color 0.2s ease;
         }
 
         nav a.active {
-            color: var(--accent);
+            color: #ffffff;
             font-weight: 600;
         }
 
-        nav a:active {
-            transform: scale(0.95);
-        }
-
         .nav-indicator {
-            position: absolute;
-            height: 38px;
-            background: rgba(59, 130, 246, 0.12);
-            border: 1px solid rgba(59, 130, 246, 0.35);
-            border-radius: 50px;
-            box-shadow: 0 0 15px var(--accent-glow);
-            z-index: 1;
-            transition: left 0.5s cubic-bezier(0.22, 1, 0.36, 1), width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-            top: 10px;
-            pointer-events: none;
+            top: 5px;
+            bottom: 5px;
+            border-radius: 999px;
         }
 
         main {
@@ -179,15 +169,16 @@
         h1 {
             font-size: clamp(2rem, 6vw, 4rem);
             font-weight: 700;
-            line-height: 1.2;
-            margin-bottom: 30px;
+            line-height: 1.18;
+            letter-spacing: -0.025em;
+            margin-bottom: 28px;
             max-width: 900px;
         }
 
         .subtitle {
             font-size: clamp(1.1rem, 2.5vw, 1.5rem);
             color: var(--text-secondary);
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
         .highlight {
@@ -210,20 +201,12 @@
             transform-origin: left center;
         }
 
-        .reveal.active .highlight {
-            animation: highlightColor 0.9s ease 0.4s both;
+        .reveal.is-revealed .highlight {
+            animation: highlightColor 0.9s ease 0.35s both;
         }
 
-        .reveal.active .highlight::after {
-            animation: underlineGrow 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
-        }
-
-        .reveal.seen:not(.active) .highlight {
-            animation: highlightColorBack 0.5s ease both;
-        }
-
-        .reveal.seen:not(.active) .highlight::after {
-            animation: underlineShrink 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+        .reveal.is-revealed .highlight::after {
+            animation: underlineGrow 1s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
         }
 
         @keyframes highlightColor {
@@ -236,21 +219,11 @@
             to { transform: scaleX(1); }
         }
 
-        @keyframes highlightColorBack {
-            from { color: var(--accent); text-shadow: 0 0 12px var(--accent-glow); }
-            to { color: var(--text-secondary); text-shadow: 0 0 0 transparent; }
-        }
-
-        @keyframes underlineShrink {
-            from { transform: scaleX(1); }
-            to { transform: scaleX(0); }
-        }
-
         .description {
-            font-size: 1.1rem;
+            font-size: 1.08rem;
             color: var(--text-secondary);
             max-width: 600px;
-            line-height: 1.6;
+            line-height: 1.65;
             margin-left: auto;
             margin-right: auto;
             padding: 0 20px;
@@ -266,121 +239,127 @@
         #publications { margin-top: 20vh; }
 
         .section-title {
-            font-size: 2.5rem;
+            font-size: 2.4rem;
             font-weight: 700;
-            margin-bottom: 50px;
+            letter-spacing: -0.02em;
+            margin-bottom: 42px;
             text-align: center;
         }
 
         .publications-container, .contact-container {
-            background: rgba(59, 130, 246, 0.04);
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(59, 130, 246, 0.12);
-            border-radius: 24px;
+            background: rgba(8, 14, 28, 0.24);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.42);
+            border-radius: 26px;
             padding: 30px;
-            max-width: 900px;
-            margin: 0 auto 40px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            max-width: 920px;
+            margin: 0 auto 36px;
             transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
         }
 
         .publications-container.plus-mode {
-            background: rgba(255, 140, 0, 0.05);
-            border-color: rgba(255, 140, 0, 0.25);
-            box-shadow: 0 20px 60px rgba(255, 140, 0, 0.15);
+            background: rgba(28, 18, 8, 0.28);
+            border-color: rgba(255, 140, 0, 0.22);
+            box-shadow: 0 18px 50px rgba(255, 140, 0, 0.08);
         }
 
         .pubs-tabs-wrap {
             display: none;
             justify-content: center;
             margin: 0 auto 30px;
-            max-width: 900px;
+            max-width: 920px;
         }
 
-        .pubs-tabs-wrap.visible {
-            display: flex;
-        }
+        .pubs-tabs-wrap.visible { display: flex; }
 
         .pubs-tabs {
             position: relative;
             display: flex;
-            gap: 0;
-            padding: 4px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 50px;
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
+            gap: 4px;
+            padding: 5px;
+            border-radius: 999px;
+            touch-action: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
         }
 
         .pubs-tab {
             padding: 10px 28px;
-            border-radius: 50px;
+            border-radius: 999px;
             background: transparent;
             color: var(--text-secondary);
             border: none;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             cursor: pointer;
             position: relative;
-            z-index: 2;
-            transition: color 0.3s ease;
+            z-index: 4;
+            transition: color 0.22s ease;
         }
 
-        .pubs-tab.active {
-            color: #ffffff;
-        }
+        .pubs-tab.active { color: #ffffff; }
 
         .pubs-tab-indicator {
-            position: absolute;
-            top: 4px;
-            bottom: 4px;
-            border-radius: 50px;
-            z-index: 1;
-            background: var(--accent);
-            box-shadow: 0 0 15px var(--accent-glow);
-            transition: left 0.4s cubic-bezier(0.22, 1, 0.36, 1), width 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease, box-shadow 0.4s ease;
-            pointer-events: none;
+            top: 5px;
+            bottom: 5px;
+            border-radius: 999px;
         }
 
         .pubs-tab-indicator.plus {
-            background: linear-gradient(135deg, #ffffff, #ffcc00, #ff8c00);
-            box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+            background: linear-gradient(135deg, rgba(255, 220, 120, 0.34), rgba(255, 140, 0, 0.48));
+            box-shadow: 0 0 18px rgba(255, 140, 0, 0.32);
         }
 
         .publications-grid, .social-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
+            transition: opacity 0.22s ease;
         }
 
+        .publications-grid.is-switching { opacity: 0; }
+
         .publication-card, .social-card {
-            background: rgba(59, 130, 246, 0.06);
-            border: 1px solid rgba(59, 130, 246, 0.1);
-            border-radius: 16px;
-            padding: 25px;
+            background: rgba(12, 20, 40, 0.32);
+            border-radius: 18px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 180px;
+            min-height: 184px;
             opacity: 0;
-            transform: translateY(30px);
-            transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transform: translate3d(0, 22px, 0);
+            transition:
+                opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+                background 0.22s ease,
+                box-shadow 0.22s ease;
+        }
+
+        .publication-card.is-revealed,
+        .social-card.is-revealed {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+
+        .publication-card.is-settled,
+        .social-card.is-settled {
+            transition-delay: 0ms !important;
+            transition:
+                background 0.22s ease,
+                transform 0.22s cubic-bezier(0.22, 1, 0.36, 1),
+                box-shadow 0.22s ease;
         }
 
         .publication-card.plus-card {
-            background: rgba(255, 140, 0, 0.08);
-            border-color: rgba(255, 140, 0, 0.25);
+            background: rgba(30, 20, 10, 0.36);
         }
 
         .publication-card.plus-card .pub-date {
-            color: var(--plus-color);
-            border-top-color: rgba(255, 140, 0, 0.2);
+            color: #ffb74d;
+            border-top-color: rgba(255, 140, 0, 0.16);
         }
 
-        .publication-card.plus-card .pub-title::before {
-            content: '✨ ';
-        }
+        .publication-card.plus-card .pub-title::before { content: ''; }
 
         .social-card {
             flex-direction: row;
@@ -390,171 +369,149 @@
             text-decoration: none;
             color: var(--text-primary);
             min-height: auto;
-            font-weight: 500;
+            padding: 20px 26px;
+            font-weight: 600;
             font-size: 1.05rem;
-            transform: translateY(30px) scale(0.9);
-        }
-
-        .publication-card.animate, .social-card.animate {
-            animation: slideUpFade 0.6s ease-out forwards;
+            cursor: grab;
         }
 
         .publication-card.hidden { display: none; }
 
-        @keyframes slideUpFade {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .pub-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; }
-        .pub-excerpt { color: var(--text-secondary); line-height: 1.6; font-size: 0.9rem; flex-grow: 1; }
+        .pub-title { font-size: 1.16rem; font-weight: 600; margin-bottom: 10px; }
+        .pub-excerpt { color: var(--text-secondary); line-height: 1.6; font-size: 0.92rem; flex-grow: 1; }
         .pub-date {
-            color: var(--accent);
+            color: #60a5fa;
             font-size: 0.8rem;
             font-weight: 600;
             margin-top: 15px;
             padding-top: 12px;
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
-            opacity: 0.8;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            opacity: 0.85;
         }
 
         .show-more-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            padding: 15px 40px;
-            background: rgba(59, 130, 246, 0.08);
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            border-radius: 50px;
-            color: var(--accent);
+            padding: 14px 36px;
+            background: var(--lg-tint-btn);
+            border: none;
+            border-radius: 999px;
+            color: #93c5fd;
             font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
+            cursor: grab;
             margin: 0 auto;
-            transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
         }
 
         .show-more-btn.plus-mode {
-            background: rgba(255, 140, 0, 0.1);
-            border-color: rgba(255, 140, 0, 0.3);
-            color: var(--plus-color);
+            background: rgba(34, 22, 10, 0.45);
+            color: #ffcc66;
         }
 
-        .show-more-btn:hover {
-            background: var(--accent);
-            color: var(--dark-bg);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px var(--accent-glow);
-        }
-
-        .show-more-btn.plus-mode:hover {
-            background: var(--plus-color);
-            color: var(--dark-bg);
-            box-shadow: 0 10px 30px var(--plus-glow);
-        }
-
-        .show-more-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 5px 15px var(--accent-glow);
-        }
-
-        .social-icon { font-size: 1.5rem; }
+        .social-icon { font-size: 1.45rem; }
 
         footer {
             position: relative;
             z-index: 1;
-            padding: 30px;
+            padding: 32px 24px 40px;
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid rgba(59, 130, 246, 0.1);
+            align-items: flex-start;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
             max-width: 1200px;
             margin: 0 auto;
             width: 100%;
-            gap: 15px;
+            gap: 16px;
+        }
+
+        .footer-left {
+            padding-top: 2px;
         }
 
         .footer-left a { color: var(--accent); text-decoration: none; font-weight: 600; transition: opacity 0.25s ease; }
-        .footer-right { color: var(--text-secondary); font-size: 0.9rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .footer-sub-btn {
+
+        .footer-right {
             color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .footer-sub-btn {
+            color: #ffd180;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 600;
-            padding: 6px 14px;
-            background: rgba(255, 140, 0, 0.08);
-            border: 1px solid rgba(255, 140, 0, 0.25);
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.25s ease;
+            padding: 8px 16px;
+            background: rgba(34, 22, 10, 0.45);
+            border-radius: 999px;
+            cursor: grab;
             display: inline-flex;
             align-items: center;
             gap: 6px;
         }
 
-        .footer-sub-btn:hover {
-            background: var(--plus-color);
-            color: var(--dark-bg);
-            border-color: var(--plus-color);
-            box-shadow: 0 0 15px var(--plus-glow);
-        }
-
         body.plus-active .footer-sub-btn {
-            background: linear-gradient(135deg, #ffffff, #ffcc00, #ff8c00);
-            border-color: transparent;
-            color: var(--dark-bg);
+            background: linear-gradient(135deg, rgba(255, 240, 190, 0.16), rgba(255, 165, 20, 0.28));
+            color: #ffffff;
         }
 
-        .reveal { opacity: 0; }
-        .reveal.active { opacity: 1; animation: revealIn 0.8s ease-out both; }
-        .reveal.seen:not(.active) { opacity: 0; animation: revealOut 0.4s ease both; }
-
-        @keyframes revealIn {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        .reveal {
+            opacity: 0;
+            transform: translate3d(0, 26px, 0);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
-        @keyframes revealOut {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(0); }
+        .reveal.is-revealed {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
         }
 
-        .publication-card:hover {
-            background: rgba(59, 130, 246, 0.12);
-            border-color: rgba(59, 130, 246, 0.35);
-            transform: translateY(-6px);
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.2);
+        .publication-card.is-settled.is-touched {
+            background: rgba(20, 34, 68, 0.46);
+            transform: translate3d(0, -4px, 0);
         }
 
-        .publication-card.plus-card:hover {
-            background: rgba(255, 140, 0, 0.15);
-            border-color: rgba(255, 140, 0, 0.45);
-            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.25);
+        .publication-card.plus-card.is-settled.is-touched {
+            background: rgba(45, 28, 12, 0.48);
         }
 
-        .social-card:hover { background: rgba(59, 130, 246, 0.1); border-color: var(--accent); transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 35px rgba(59, 130, 246, 0.2); }
-        .footer-left a:hover { opacity: 0.8; }
-        nav a:hover { color: var(--accent); }
-
-        html.hover-off .logo:hover { transform: none; background: rgba(59, 130, 246, 0.06); }
-        html.hover-off nav a:hover { color: var(--text-secondary); }
-        html.hover-off nav a.active:hover { color: var(--accent); }
-        html.hover-off .publication-card:hover { background: rgba(59, 130, 246, 0.06); border-color: rgba(59, 130, 246, 0.1); transform: none; box-shadow: none; }
-        html.hover-off .publication-card.plus-card:hover { background: rgba(255, 140, 0, 0.08); border-color: rgba(255, 140, 0, 0.25); }
-        html.hover-off .show-more-btn:hover { background: rgba(59, 130, 246, 0.08); border-color: rgba(59, 130, 246, 0.25); color: var(--accent); transform: none; box-shadow: none; }
-        html.hover-off .show-more-btn.plus-mode:hover { background: rgba(255, 140, 0, 0.1); border-color: rgba(255, 140, 0, 0.3); color: var(--plus-color); }
-        html.hover-off .social-card:hover { background: rgba(59, 130, 246, 0.06); border-color: rgba(59, 130, 246, 0.1); transform: none; box-shadow: none; }
-        html.hover-off .footer-left a:hover { opacity: 1; }
-        html.hover-off .footer-sub-btn:hover { background: rgba(255, 140, 0, 0.08); color: var(--text-secondary); border-color: rgba(255, 140, 0, 0.25); box-shadow: none; }
+        @media (hover: hover) and (pointer: fine) {
+            .logo:hover { background: rgba(25, 42, 82, 0.45); }
+            nav a:hover { color: #ffffff; }
+            .publication-card.is-settled:hover {
+                background: rgba(20, 34, 68, 0.46);
+                transform: translate3d(0, -4px, 0);
+            }
+            .publication-card.plus-card.is-settled:hover {
+                background: rgba(45, 28, 12, 0.48);
+            }
+            .social-card.is-settled:hover {
+                background: rgba(22, 38, 76, 0.48);
+            }
+            .show-more-btn:hover {
+                background: rgba(30, 52, 98, 0.48);
+                color: #ffffff;
+            }
+            .show-more-btn.plus-mode:hover {
+                background: rgba(58, 34, 12, 0.55);
+                color: #ffffff;
+            }
+            .footer-left a:hover { opacity: 0.8; }
+            .footer-sub-btn:hover {
+                background: rgba(58, 34, 12, 0.58);
+                color: #ffffff;
+            }
+            .modal-close:hover { background: rgba(255, 255, 255, 0.22); }
+        }
 
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            inset: 0;
+            background: rgba(4, 7, 15, 0.78);
             z-index: 2000;
             display: none;
             align-items: center;
@@ -564,290 +521,235 @@
 
         .modal-overlay.active {
             display: flex;
-            animation: overlayIn 0.3s ease both;
+            animation: overlayIn 0.25s ease both;
         }
 
         .modal-overlay.active .modal {
-            animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+            animation: modalIn 0.34s cubic-bezier(0.22, 1.15, 0.36, 1) both;
         }
 
-        @keyframes overlayIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .modal-overlay.closing:not(.active) {
+            display: flex;
+            pointer-events: none;
+            animation: overlayOut 0.24s cubic-bezier(0.4, 0, 0.2, 1) forwards;
         }
 
+        .modal-overlay.closing:not(.active) .modal {
+            animation: modalOut 0.24s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes modalIn {
-            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            from { opacity: 0; transform: translateY(24px) scale(0.96); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        @keyframes overlayOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        @keyframes modalOut {
+            from { opacity: 1; transform: translateY(0) scale(1); }
+            to { opacity: 0; transform: translateY(18px) scale(0.95); }
+        }
+
         .modal {
-            background: #0d1420;
-            border: 1px solid rgba(59, 130, 246, 0.25);
-            border-radius: 24px;
-            padding: 30px;
+            border-radius: 26px;
+            padding: 24px 26px;
             max-width: 520px;
             width: 100%;
             max-height: 90vh;
-            overflow: hidden;
+            overflow: visible;
             position: relative;
             display: flex;
             flex-direction: column;
         }
 
-        .modal.plus-theme {
-            border-color: rgba(255, 140, 0, 0.35);
+        .lg-modal-bg {
+            background: rgba(10, 16, 32, 0.78);
+        }
+
+        .modal.plus-theme .lg-modal-bg {
+            --lg-rim-b: rgba(255, 204, 0, 0.16);
+            --lg-rim-c: rgba(255, 140, 0, 0.38);
         }
 
         .modal-scroll {
+            position: relative;
+            z-index: 4;
             overflow-y: auto;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             flex: 1 1 auto;
             min-height: 0;
+            padding: 6px 18px 20px;
+            margin: -6px -18px -20px;
+        }
+
+        .modal-scroll::-webkit-scrollbar {
+            display: none;
         }
 
         .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
+            position: absolute !important;
+            top: 14px;
+            right: 14px;
             width: 36px;
             height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
             border: none;
             color: var(--text-primary);
-            font-size: 1.2rem;
-            cursor: pointer;
+            font-size: 1.1rem;
+            cursor: grab;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 10;
-            transition: background 0.25s ease;
+            z-index: 20 !important;
         }
 
-        .modal-close:hover { background: rgba(255, 255, 255, 0.15); }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            padding-right: 40px;
-        }
-
-        .modal-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
+        .modal-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 16px; padding-right: 40px; }
 
         .sub-status {
             display: flex;
             align-items: center;
             gap: 14px;
-            padding: 16px;
+            padding: 14px;
             background: rgba(59, 130, 246, 0.08);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 14px;
-            margin-bottom: 20px;
-        }
-
-        .sub-status.active {
-            background: linear-gradient(135deg, rgba(255, 204, 0, 0.12), rgba(255, 140, 0, 0.12));
-            border-color: rgba(255, 140, 0, 0.4);
-        }
-
-        .sub-status-icon {
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
-
-        .sub-status-text {
-            flex-grow: 1;
-        }
-
-        .sub-status-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-
-        .sub-status-desc {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
-
-        .sub-tutorial {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
             margin-bottom: 16px;
         }
 
+        .sub-status.active {
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.10), rgba(255, 140, 0, 0.10));
+            border-color: rgba(255, 140, 0, 0.32);
+        }
+
+        .sub-status-icon { font-size: 1.85rem; flex-shrink: 0; }
+        .sub-status-text { flex-grow: 1; }
+        .sub-status-title { font-weight: 700; font-size: 0.98rem; margin-bottom: 3px; }
+        .sub-status-desc { color: var(--text-secondary); font-size: 0.84rem; }
+
+        .sub-tutorial { margin-bottom: 14px; }
+
         .sub-step {
             display: flex;
-            gap: 14px;
-            padding: 14px;
+            gap: 12px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            margin-bottom: 10px;
+            border-radius: 14px;
+            margin-bottom: 8px;
             align-items: flex-start;
         }
 
         .sub-step-num {
             flex-shrink: 0;
-            width: 32px;
-            height: 32px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ffffff, #ffcc00, #ff8c00);
             color: var(--dark-bg);
             font-weight: 800;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .sub-step-text {
-            flex-grow: 1;
-            color: var(--text-secondary);
-            font-size: 0.92rem;
-            line-height: 1.5;
-        }
-
-        .sub-step-text b {
-            color: var(--text-primary);
-        }
+        .sub-step-text { flex-grow: 1; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.45; }
+        .sub-step-text b { color: var(--text-primary); }
 
         .sub-step-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             margin-top: 8px;
-            padding: 7px 16px;
-            background: rgba(59, 130, 246, 0.12);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            color: var(--accent);
-            border-radius: 50px;
-            font-size: 0.85rem;
+            padding: 8px 16px;
+            background: rgba(25, 45, 88, 0.50);
+            color: #93c5fd;
+            border-radius: 999px;
+            font-size: 0.84rem;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.25s ease;
-        }
-
-        .sub-step-btn:hover {
-            background: var(--accent);
-            color: var(--dark-bg);
-            border-color: var(--accent);
+            cursor: grab;
         }
 
         .sub-warning {
-            padding: 12px 14px;
+            padding: 11px 13px;
             background: rgba(244, 67, 54, 0.08);
-            border: 1px solid rgba(244, 67, 54, 0.25);
-            border-radius: 12px;
-            color: #ff7961;
-            font-size: 0.82rem;
-            line-height: 1.5;
-            margin-top: 12px;
+            border: 1px solid rgba(244, 67, 54, 0.22);
+            border-radius: 14px;
+            color: #ff8a75;
+            font-size: 0.8rem;
+            line-height: 1.45;
+            margin-top: 10px;
             display: flex;
             gap: 10px;
             align-items: flex-start;
         }
 
-        .sub-warning-icon {
-            flex-shrink: 0;
-            font-size: 1.1rem;
-        }
-
-        .sub-benefits {
-            margin-top: 16px;
-        }
-
-        .sub-benefits-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
+        .sub-warning-icon { flex-shrink: 0; font-size: 1.05rem; }
+        .sub-benefits { margin-top: 12px; }
+        .sub-benefits-title { font-weight: 700; font-size: 0.96rem; margin-bottom: 8px; }
 
         .sub-benefit {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 12px;
-            background: rgba(255, 140, 0, 0.05);
-            border: 1px solid rgba(255, 140, 0, 0.15);
-            border-radius: 10px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            padding: 9px 12px;
+            background: rgba(255, 140, 0, 0.06);
+            border: 1px solid rgba(255, 140, 0, 0.14);
+            border-radius: 12px;
+            margin-bottom: 7px;
+            font-size: 0.88rem;
         }
 
-        .sub-benefit-icon {
-            font-size: 1.2rem;
-        }
+        .sub-benefit-icon { font-size: 1.15rem; }
 
         .gold-btn {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ffffff 0%, #ffcc00 40%, #ff8c00 100%);
+            padding: 13px;
+            background: linear-gradient(135deg, rgba(255, 240, 190, 0.85) 0%, rgba(255, 204, 0, 0.82) 40%, rgba(255, 140, 0, 0.85) 100%);
             border: none;
-            border-radius: 12px;
+            border-radius: 999px;
             color: var(--dark-bg);
             font-weight: 800;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            box-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
+            font-size: 0.96rem;
+            cursor: grab;
+            box-shadow: 0 8px 24px rgba(255, 140, 0, 0.24);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
 
-        .gold-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 140, 0, 0.5);
-        }
-
-        .gold-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
         .ghost-btn {
             width: 100%;
             padding: 12px;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.25s ease;
-        }
-
-        .ghost-btn:hover {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.09);
+            border: none;
+            border-radius: 999px;
             color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.94rem;
+            cursor: grab;
+            margin-top: 12px;
         }
 
-        .gift-giver {
-            text-align: center;
-            padding: 20px 10px;
-        }
-
-        .gift-icon {
-            font-size: 4rem;
-            margin-bottom: 16px;
-            animation: giftFloat 2s ease-in-out infinite;
-        }
-
+        .gift-giver { text-align: center; padding: 16px 8px; }
+        .gift-icon { font-size: 3.8rem; margin-bottom: 14px; animation: giftFloat 2s ease-in-out infinite; }
         @keyframes giftFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
 
         .gift-title {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 700;
             margin-bottom: 10px;
             background: linear-gradient(135deg, #ffffff, #ffcc00, #ff8c00);
@@ -856,39 +758,33 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .gift-text {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 24px;
-        }
+        .gift-text { color: var(--text-secondary); font-size: 0.94rem; line-height: 1.55; margin-bottom: 22px; }
 
         .loader {
             width: 24px;
             height: 24px;
-            border: 3px solid rgba(0, 0, 0, 0.2);
-            border-top-color: var(--dark-bg);
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #ffcc00;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             display: inline-block;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .success-check {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 20px;
+            width: 66px;
+            height: 66px;
+            margin: 0 auto 18px;
             border-radius: 50%;
             background: linear-gradient(135deg, #ffffff, #ffcc00, #ff8c00);
+            color: var(--dark-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 2.3rem;
             animation: successPop 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-            box-shadow: 0 0 30px rgba(255, 140, 0, 0.5);
+            box-shadow: 0 0 30px rgba(255, 140, 0, 0.4);
         }
 
         @keyframes successPop {
@@ -897,104 +793,89 @@
             100% { transform: scale(1) rotate(0); }
         }
 
-        .success-title {
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .success-text {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
+        .success-title { text-align: center; font-size: 1.35rem; font-weight: 700; margin-bottom: 8px; }
+        .success-text { text-align: center; color: var(--text-secondary); font-size: 0.94rem; line-height: 1.55; margin-bottom: 18px; }
 
         .active-sub-info {
-            padding: 16px;
+            padding: 14px;
             background: linear-gradient(135deg, rgba(255, 204, 0, 0.08), rgba(255, 140, 0, 0.08));
-            border: 1px solid rgba(255, 140, 0, 0.3);
-            border-radius: 14px;
-            margin-bottom: 16px;
+            border: 1px solid rgba(255, 140, 0, 0.28);
+            border-radius: 16px;
+            margin-bottom: 14px;
             text-align: center;
         }
 
         .active-sub-info .sub-info-title {
             font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 6px;
+            font-size: 0.98rem;
+            margin-bottom: 4px;
             background: linear-gradient(135deg, #ffffff, #ffcc00, #ff8c00);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .active-sub-info .sub-info-date {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
+        .active-sub-info .sub-info-date { color: var(--text-secondary); font-size: 0.88rem; }
 
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
-                gap: 12px;
+                gap: 10px;
                 top: 10px;
             }
 
             nav {
-                padding: 6px 8px;
-                gap: 6px;
+                padding: 5px;
+                gap: 4px;
                 width: fit-content;
                 margin: 0 auto;
                 max-width: 98%;
-                border-radius: 20px;
             }
 
             nav a {
-                padding: 6px 10px;
-                font-size: 0.78rem;
+                padding: 7px 12px;
+                font-size: 0.8rem;
             }
 
             .nav-indicator {
-                height: 32px;
-                top: 50%;
-                transform: translateY(-50%);
+                top: 5px;
+                bottom: 5px;
             }
 
             section { scroll-margin-top: 60px; }
 
-            .publications-grid, .social-grid {
-                grid-template-columns: 1fr;
-            }
-
+            .publications-grid, .social-grid { grid-template-columns: 1fr; }
             .publications-container, .contact-container { padding: 20px; }
 
             footer {
                 flex-direction: column;
-                gap: 15px;
+                align-items: center;
+                gap: 12px;
                 text-align: center;
+                padding: 28px 20px 38px;
             }
 
             .footer-right {
-                justify-content: center;
+                align-items: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-dots" id="bgDots"></div>
+    <div class="bg-ambient" aria-hidden="true"></div>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
     <header>
-        <a href="#home" class="logo">
+        <a href="#home" class="logo lg-surface lg-plus-reactive" id="logoBtn" data-lg="logo" data-lg-radius="999">
             <span>🌐</span>
             <span class="logo-text">
                 <span class="logo-blue">Dany</span><span class="logo-white">.run.place</span><span class="logo-plus">+</span>
             </span>
         </a>
-        <nav id="nav">
-            <div class="nav-indicator" id="navIndicator"></div>
+
+        <nav id="nav" class="lg-plus-reactive">
+            <div class="lg-bar-bg lg-surface" data-lg="bar" data-lg-radius="999"></div>
+            <div class="nav-indicator lg-lens-pill" id="navIndicator" data-lg="lens" data-lg-radius="999"></div>
             <a href="#home" class="nav-link active" data-section="about">Главная</a>
             <a href="#publications" class="nav-link" data-section="publications">Публикации</a>
             <a href="#contact" class="nav-link" data-section="contact">Связь</a>
@@ -1002,7 +883,7 @@
     </header>
 
     <main>
-        <div id="about" class="reveal active-section">
+        <div id="about" class="reveal is-revealed">
             <h1>Добро пожаловать в<br>мое цифровое пространство</h1>
             <p class="subtitle">Я Dany - <span class="highlight">Дизайнер & Вайбкодер</span></p>
             <p class="description">
@@ -1014,7 +895,8 @@
             <h2 class="section-title reveal">Публикации</h2>
             <div class="pubs-tabs-wrap" id="pubsTabsWrap">
                 <div class="pubs-tabs" id="pubsTabs">
-                    <div class="pubs-tab-indicator" id="pubsTabIndicator"></div>
+                    <div class="lg-bar-bg lg-surface" data-lg="bar" data-lg-radius="999"></div>
+                    <div class="pubs-tab-indicator lg-lens-pill" id="pubsTabIndicator" data-lg="lens" data-lg-radius="999"></div>
                     <button class="pubs-tab active" data-tab="regular" onclick="switchPubsTab('regular')">Обычные</button>
                     <button class="pubs-tab" data-tab="plus" onclick="switchPubsTab('plus')">Плюс</button>
                 </div>
@@ -1022,7 +904,7 @@
             <div class="publications-container reveal" id="pubsContainer">
                 <div class="publications-grid" id="publicationsGrid"></div>
             </div>
-            <button class="show-more-btn reveal" id="showMoreBtn" onclick="togglePublications()">
+            <button class="show-more-btn lg-surface reveal" id="showMoreBtn" data-lg="button" data-lg-radius="999" onclick="togglePublications()">
                 <span id="showMoreText">Показать ещё</span>
                 <span id="hiddenCount">(0)</span>
             </button>
@@ -1040,7 +922,7 @@
         <div class="footer-left">Made by <a href="#" target="_blank">Dany</a></div>
         <div class="footer-right">
             <span>© Dany 2026</span>
-            <a href="#sub" class="footer-sub-btn" onclick="handleSubLink(event)">
+            <a href="#sub" class="footer-sub-btn lg-surface" id="footerSubBtn" data-lg="button" data-lg-radius="999" onclick="handleSubLink(event)">
                 <span>✨</span>
                 <span id="footerSubLabel">Подписка</span>
             </a>
@@ -1049,13 +931,15 @@
 
     <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this) closeModal()">
         <div class="modal" id="modal">
-            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="lg-modal-bg lg-surface" data-lg="card" data-lg-radius="26"></div>
+            <button class="modal-close lg-surface" id="modalCloseBtn" data-lg="button" data-lg-radius="999" onclick="closeModal()" aria-label="Закрыть"><span>✕</span></button>
             <div class="modal-scroll" id="modalScroll">
                 <div id="modalContent"></div>
             </div>
         </div>
     </div>
 
+    <script src="./asset.js"></script>
     <script>
         if ('scrollRestoration' in history) {
             history.scrollRestoration = 'manual';
@@ -1089,6 +973,40 @@
         const visibleLimit = 3;
         let currentActiveSection = 'about';
         let currentPubsTab = 'regular';
+        let modalCloseTimer = null;
+        let lastPlusActive = null;
+
+        function bindModalPullables() {
+            GlisseGlass.refresh(document.getElementById('modalOverlay'));
+            document.querySelectorAll('#modalContent .gold-btn, #modalContent .ghost-btn').forEach((btn) => {
+                btn.classList.add('lg-surface');
+                if (!btn.dataset.lg) {
+                    btn.dataset.lg = 'button';
+                    btn.dataset.lgRadius = '999';
+                }
+                GlisseGlass.attachPullable(btn, {
+                    holdDelay: 100,
+                    maxAnchorShift: 5,
+                    maxStretchX: 0.045,
+                    maxStretchY: 0.14,
+                    baseScale: 1.02
+                });
+            });
+            document.querySelectorAll('#modalContent .sub-step-btn').forEach((btn) => {
+                btn.classList.add('lg-surface');
+                if (!btn.dataset.lg) {
+                    btn.dataset.lg = 'button';
+                    btn.dataset.lgRadius = '999';
+                }
+                GlisseGlass.attachPullable(btn, {
+                    holdDelay: 100,
+                    maxAnchorShift: 6,
+                    maxStretchX: 0.11,
+                    maxStretchY: 0.14
+                });
+            });
+            GlisseGlass.refresh(document.getElementById('modalOverlay'));
+        }
 
         function getPlusStatus() {
             const code = localStorage.getItem('dany_plus_code');
@@ -1105,7 +1023,8 @@
 
         function updatePlusUI() {
             const status = getPlusStatus();
-            if (status) {
+            const isActive = Boolean(status);
+            if (isActive) {
                 document.body.classList.add('plus-active');
                 document.getElementById('footerSubLabel').textContent = 'Плюс активен';
                 document.getElementById('pubsTabsWrap').classList.add('visible');
@@ -1117,8 +1036,12 @@
                     currentPubsTab = 'regular';
                 }
             }
-            renderPublications();
-            updatePubsTabIndicator();
+            if (lastPlusActive !== isActive) {
+                lastPlusActive = isActive;
+                renderPublications();
+                updatePubsTabIndicator();
+                GlisseGlass.refresh();
+            }
         }
 
         function formatDateRu(date) {
@@ -1161,9 +1084,8 @@
                 </div>
             `;
             document.getElementById('modalScroll').scrollTop = 0;
-            setTimeout(() => {
-                completeActivation(code, days);
-            }, 1800);
+            bindModalPullables();
+            setTimeout(() => completeActivation(code, days), 1800);
         }
 
         function completeActivation(code, days) {
@@ -1181,26 +1103,18 @@
                 <div class="success-check">✓</div>
                 <div class="success-title">Подписка активирована!</div>
                 <div class="success-text">Она продлится до <b>${formatDateRu(expiryDate)}</b>.</div>
-                <div style="margin-bottom: 20px;">
-                    <div class="sub-benefits-title" style="text-align:center; margin-bottom: 12px;">Что вам доступно:</div>
-                    <div class="sub-benefit">
-                        <span class="sub-benefit-icon">✨</span>
-                        <span>Значок <b>+</b> рядом с логотипом dany.run.place</span>
-                    </div>
-                    <div class="sub-benefit">
-                        <span class="sub-benefit-icon">📖</span>
-                        <span>Публикации только для плюс-пользователей</span>
-                    </div>
-                    <div class="sub-benefit">
-                        <span class="sub-benefit-icon">🧪</span>
-                        <span>Ранний доступ к бета-функциям</span>
-                    </div>
+                <div style="margin-bottom: 16px;">
+                    <div class="sub-benefits-title" style="text-align:center; margin-bottom: 10px;">Что вам доступно:</div>
+                    <div class="sub-benefit"><span class="sub-benefit-icon">✨</span><span>Значок <b>+</b> рядом с логотипом dany.run.place</span></div>
+                    <div class="sub-benefit"><span class="sub-benefit-icon">📖</span><span>Публикации только для плюс-пользователей</span></div>
+                    <div class="sub-benefit"><span class="sub-benefit-icon">🧪</span><span>Ранний доступ к бета-функциям</span></div>
                 </div>
                 <button class="gold-btn" onclick="goToPublicationsFromModal()">Перейти к публикациям</button>
                 <button class="ghost-btn" onclick="closeModal()">Закрыть</button>
             `;
             document.getElementById('modalScroll').scrollTop = 0;
             updatePlusUI();
+            bindModalPullables();
         }
 
         function goToPublicationsFromModal() {
@@ -1226,6 +1140,7 @@
                 </div>
             `;
             document.getElementById('modalScroll').scrollTop = 0;
+            bindModalPullables();
         }
 
         function showAlreadyActive(expiry) {
@@ -1245,6 +1160,7 @@
                 </div>
             `;
             document.getElementById('modalScroll').scrollTop = 0;
+            bindModalPullables();
         }
 
         function openGiftModal(code) {
@@ -1256,6 +1172,7 @@
             if (current) {
                 showAlreadyActive(current.expiry);
                 document.getElementById('modalOverlay').classList.add('active');
+                bindModalPullables();
                 return;
             }
 
@@ -1271,6 +1188,7 @@
                 `;
                 document.getElementById('modalScroll').scrollTop = 0;
                 document.getElementById('modalOverlay').classList.add('active');
+                bindModalPullables();
                 return;
             }
 
@@ -1285,6 +1203,7 @@
                 `;
                 document.getElementById('modalScroll').scrollTop = 0;
                 document.getElementById('modalOverlay').classList.add('active');
+                bindModalPullables();
                 return;
             }
 
@@ -1299,6 +1218,7 @@
                 `;
                 document.getElementById('modalScroll').scrollTop = 0;
                 document.getElementById('modalOverlay').classList.add('active');
+                bindModalPullables();
                 return;
             }
 
@@ -1316,6 +1236,7 @@
             `;
             document.getElementById('modalScroll').scrollTop = 0;
             document.getElementById('modalOverlay').classList.add('active');
+            bindModalPullables();
         }
 
         function openSubscriptionModal() {
@@ -1345,24 +1266,15 @@
                     </div>
                     <div class="sub-benefits">
                         <div class="sub-benefits-title">Что вам доступно:</div>
-                        <div class="sub-benefit">
-                            <span class="sub-benefit-icon">✨</span>
-                            <span>Значок <b>+</b> рядом с логотипом dany.run.place</span>
-                        </div>
-                        <div class="sub-benefit">
-                            <span class="sub-benefit-icon">📖</span>
-                            <span>Публикации только для плюс-пользователей</span>
-                            <div class="sub-benefit">
-                            <span class="sub-benefit-icon">🧪</span>
-                            <span>Ранний доступ к бета-функциям</span>
-                         </div>
-                        </div>
+                        <div class="sub-benefit"><span class="sub-benefit-icon">✨</span><span>Значок <b>+</b> рядом с логотипом dany.run.place</span></div>
+                        <div class="sub-benefit"><span class="sub-benefit-icon">📖</span><span>Публикации только для плюс-пользователей</span></div>
+                        <div class="sub-benefit"><span class="sub-benefit-icon">🧪</span><span>Ранний доступ к бета-функциям</span></div>
                     </div>
                     <div class="sub-warning">
                         <span class="sub-warning-icon">⚠️</span>
                         <span>Звёзды не возвращаются, если вы специально сбросили кэш браузера или вам просто не понравилось.</span>
                     </div>
-                    <button class="gold-btn" onclick="goToPublicationsFromModal()" style="margin-top: 16px;">Перейти к публикациям</button>
+                    <button class="gold-btn" onclick="goToPublicationsFromModal()" style="margin-top: 14px;">Перейти к публикациям</button>
                     <button class="ghost-btn" onclick="closeModal()">Закрыть</button>
                 `;
             } else {
@@ -1375,20 +1287,11 @@
                             <div class="sub-status-desc">Оформите её, чтобы получить доступ к эксклюзивному контенту</div>
                         </div>
                     </div>
-                    <div class="sub-benefits" style="margin-bottom: 20px;">
+                    <div class="sub-benefits" style="margin-bottom: 14px;">
                         <div class="sub-benefits-title">Что даст подписка:</div>
-                        <div class="sub-benefit">
-                            <span class="sub-benefit-icon">✨</span>
-                            <span>Значок <b>+</b> рядом с логотипом dany.run.place</span>
-                        </div>
-                        <div class="sub-benefit">
-                            <span class="sub-benefit-icon">📖</span>
-                            <span>Публикации только для плюс-пользователей</span>
-                            <div class="sub-benefit">
-                            <span class="sub-benefit-icon">🧪</span>
-                            <span>Ранний доступ к бета-функциям</span>
-                        </div>
-                        </div>
+                        <div class="sub-benefit"><span class="sub-benefit-icon">✨</span><span>Значок <b>+</b> рядом с логотипом dany.run.place</span></div>
+                        <div class="sub-benefit"><span class="sub-benefit-icon">📖</span><span>Публикации только для плюс-пользователей</span></div>
+                        <div class="sub-benefit"><span class="sub-benefit-icon">🧪</span><span>Ранний доступ к бета-функциям</span></div>
                     </div>
                     <div class="sub-tutorial">
                         <div class="sub-benefits-title">Как оформить подписку:</div>
@@ -1422,12 +1325,22 @@
             }
             document.getElementById('modalScroll').scrollTop = 0;
             document.getElementById('modalOverlay').classList.add('active');
+            bindModalPullables();
         }
 
         function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('active');
+            const overlay = document.getElementById('modalOverlay');
             const modal = document.getElementById('modal');
-            modal.classList.remove('plus-theme');
+            if (!overlay.classList.contains('active') || overlay.classList.contains('closing')) return;
+            clearTimeout(modalCloseTimer);
+            overlay.classList.remove('active');
+            overlay.classList.add('closing');
+            modalCloseTimer = setTimeout(() => {
+                overlay.classList.remove('closing');
+                if (!overlay.classList.contains('active')) {
+                    modal.classList.remove('plus-theme');
+                }
+            }, 250);
         }
 
         function handleSubLink(e) {
@@ -1447,16 +1360,22 @@
         }
 
         function switchPubsTab(tab) {
-            if (tab === 'plus' && !getPlusStatus()) {
-                tab = 'regular';
-            }
+            if (tab === 'plus' && !getPlusStatus()) tab = 'regular';
+            if (currentPubsTab === tab) return;
+
             currentPubsTab = tab;
             showingAllPublications = false;
             document.querySelectorAll('.pubs-tab').forEach(t => {
                 t.classList.toggle('active', t.dataset.tab === tab);
             });
             updatePubsTabIndicator();
-            renderPublications();
+
+            const grid = document.getElementById('publicationsGrid');
+            grid.classList.add('is-switching');
+            setTimeout(() => {
+                renderPublications();
+                grid.classList.remove('is-switching');
+            }, 180);
         }
 
         function updatePubsTabIndicator() {
@@ -1468,27 +1387,21 @@
 
             const containerRect = tabsContainer.getBoundingClientRect();
             const tabRect = activeTab.getBoundingClientRect();
-            const left = tabRect.left - containerRect.left;
-            const width = tabRect.width;
-
-            indicator.style.left = left + 'px';
-            indicator.style.width = width + 'px';
-
-            if (currentPubsTab === 'plus') {
-                indicator.classList.add('plus');
-            } else {
-                indicator.classList.remove('plus');
-            }
+            indicator.style.left = `${tabRect.left - containerRect.left}px`;
+            indicator.style.width = `${tabRect.width}px`;
 
             const container = document.getElementById('pubsContainer');
             const btn = document.getElementById('showMoreBtn');
             if (currentPubsTab === 'plus') {
+                indicator.classList.add('plus');
                 container.classList.add('plus-mode');
                 btn.classList.add('plus-mode');
             } else {
+                indicator.classList.remove('plus');
                 container.classList.remove('plus-mode');
                 btn.classList.remove('plus-mode');
             }
+            GlisseGlass.updateFilter(indicator);
         }
 
         function getCurrentPublications() {
@@ -1516,14 +1429,17 @@
 
             sorted.forEach((pub, i) => {
                 const card = document.createElement('div');
-                card.className = 'publication-card' + (isPlus ? ' plus-card' : '');
-                card.style.animationDelay = `${i * 0.1}s`;
+                card.className = 'publication-card lg-surface' + (isPlus ? ' plus-card' : '');
+                card.dataset.lg = 'card';
+                card.dataset.lgRadius = '18';
+                card.style.transitionDelay = `${Math.min(i, 4) * 65}ms`;
                 if (i >= visibleLimit && !showingAllPublications) card.classList.add('hidden');
                 card.innerHTML = `<div class="pub-title">${pub.title}</div><div class="pub-excerpt">${pub.excerpt}</div><div class="pub-date">${formatDate(pub.date)}</div>`;
                 grid.appendChild(card);
             });
             updateShowMoreButton();
             observeElements();
+            GlisseGlass.refresh(grid);
         }
 
         function updateShowMoreButton() {
@@ -1543,11 +1459,33 @@
                 countSpan.textContent = `(${hidden})`;
                 countSpan.style.display = 'inline';
             }
+            GlisseGlass.updateFilter(btn);
         }
 
         function togglePublications() {
             showingAllPublications = !showingAllPublications;
-            renderPublications();
+            const cards = [...document.querySelectorAll('#publicationsGrid .publication-card')];
+            cards.forEach((card, i) => {
+                if (i < visibleLimit) return;
+                if (showingAllPublications) {
+                    card.classList.remove('hidden', 'is-revealed', 'is-settled');
+                    card.style.transitionDelay = `${(i - visibleLimit) * 75}ms`;
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            card.classList.add('is-revealed');
+                            setTimeout(() => {
+                                card.style.transitionDelay = '0ms';
+                                card.classList.add('is-settled');
+                            }, 700);
+                        });
+                    });
+                } else {
+                    card.classList.remove('is-revealed', 'is-settled', 'is-touched');
+                    card.classList.add('hidden');
+                }
+            });
+            updateShowMoreButton();
+            GlisseGlass.refresh(document.getElementById('publicationsGrid'));
         }
 
         function renderSocialLinks() {
@@ -1556,104 +1494,142 @@
             CONFIG.socialLinks.forEach((link, i) => {
                 const a = document.createElement('a');
                 a.href = link.url;
-                a.className = 'social-card';
+                a.className = 'social-card lg-surface';
+                a.dataset.lg = 'button';
+                a.dataset.lgRadius = '18';
                 a.target = '_blank';
                 a.rel = 'noopener noreferrer';
-                a.style.animationDelay = `${i * 0.15}s`;
+                a.style.transitionDelay = `${i * 80}ms`;
                 a.innerHTML = `<span class="social-icon">${link.icon}</span><span>${link.name}</span>`;
                 grid.appendChild(a);
+                GlisseGlass.attachPullable(a, { holdDelay: 100 });
             });
             observeElements();
+            GlisseGlass.refresh(grid);
         }
 
-        const bgDots = [];
+        function initBgCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let W = 0, H = 0, dpr = 1;
+            const dots = [];
 
-        function createBgDots() {
-            const container = document.getElementById('bgDots');
-            for (let i = 0; i < 120; i++) {
-                const el = document.createElement('div');
-                el.className = 'bg-dot';
-                el.style.left = Math.random() * 100 + '%';
-                el.style.top = Math.random() * 100 + '%';
-                container.appendChild(el);
-                bgDots.push({
-                    el: el,
-                    baseOpacity: 0.15 + Math.random() * 0.3,
-                    curX: 0,
-                    curY: 0,
-                    curO: 0.3,
-                    phase1: Math.random() * Math.PI * 2,
-                    phase2: Math.random() * Math.PI * 2,
-                    phase3: Math.random() * Math.PI * 2,
-                    speed1: 0.0002 + Math.random() * 0.0002,
-                    speed2: 0.00015 + Math.random() * 0.00015,
-                    speedO: 0.0002 + Math.random() * 0.0002,
-                    amp1: 7 + Math.random() * 6,
-                    amp2: 4 + Math.random() * 4
-                });
+            function buildDots(w, h) {
+                dots.length = 0;
+                for (let i = 0; i < 110; i++) {
+                    dots.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        r: 1.2 + Math.random() * 1.2,
+                        baseO: 0.16 + Math.random() * 0.28,
+                        p1: Math.random() * Math.PI * 2,
+                        p2: Math.random() * Math.PI * 2,
+                        p3: Math.random() * Math.PI * 2,
+                        s1: 0.00018 + Math.random() * 0.00018,
+                        s2: 0.00014 + Math.random() * 0.00014,
+                        a1: 7 + Math.random() * 6,
+                        a2: 4 + Math.random() * 4
+                    });
+                }
             }
-            requestAnimationFrame(tickBgDots);
-        }
 
-        function tickBgDots(t) {
-            const k = 0.08;
-            for (let i = 0; i < bgDots.length; i++) {
-                const d = bgDots[i];
-                const targetX = Math.sin(t * d.speed1 + d.phase1) * d.amp1 + Math.sin(t * d.speed2 + d.phase2) * d.amp2;
-                const targetY = Math.cos(t * d.speed1 * 0.9 + d.phase2) * d.amp1 + Math.cos(t * d.speed2 * 1.1 + d.phase3) * d.amp2;
-                const targetO = d.baseOpacity + 0.25 * (0.5 + 0.5 * Math.sin(t * d.speedO + d.phase3));
-                d.curX += (targetX - d.curX) * k;
-                d.curY += (targetY - d.curY) * k;
-                d.curO += (targetO - d.curO) * k;
-                d.el.style.transform = 'translate3d(' + d.curX.toFixed(2) + 'px, ' + d.curY.toFixed(2) + 'px, 0)';
-                d.el.style.opacity = d.curO.toFixed(3);
+            function resize(force) {
+                const newW = canvas.clientWidth || window.innerWidth;
+                const newH = canvas.clientHeight || window.innerHeight;
+                const dw = Math.abs(newW - W);
+                const dh = Math.abs(newH - H);
+                if (!force && dw < 2 && dh < 160) {
+                    return;
+                }
+                const prevW = W;
+                const prevH = H;
+                dpr = Math.min(2, window.devicePixelRatio || 1);
+                W = newW;
+                H = newH;
+                canvas.width = W * dpr;
+                canvas.height = H * dpr;
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                if (dots.length === 0) {
+                    buildDots(W, H);
+                } else if (prevW > 0 && prevH > 0 && dw >= 2) {
+                    const scaleX = W / prevW;
+                    const scaleY = H / prevH;
+                    for (let i = 0; i < dots.length; i++) {
+                        dots[i].x *= scaleX;
+                        dots[i].y *= scaleY;
+                    }
+                }
             }
-            requestAnimationFrame(tickBgDots);
+
+            resize(true);
+            window.addEventListener('resize', () => resize(false), { passive: true });
+
+            function draw(t) {
+                ctx.clearRect(0, 0, W, H);
+                const isPlus = document.body.classList.contains('plus-active');
+                for (let i = 0; i < dots.length; i++) {
+                    const d = dots[i];
+                    const x = d.x + Math.sin(t * d.s1 + d.p1) * d.a1 + Math.sin(t * d.s2 + d.p2) * d.a2;
+                    const y = d.y + Math.cos(t * d.s1 * 0.9 + d.p2) * d.a1 + Math.cos(t * d.s2 * 1.1 + d.p3) * d.a2;
+                    const o = d.baseO + 0.18 * (0.5 + 0.5 * Math.sin(t * d.s1 + d.p3));
+                    ctx.fillStyle = isPlus && i % 4 === 0
+                        ? `rgba(255, 165, 30, ${o.toFixed(3)})`
+                        : `rgba(59, 130, 246, ${o.toFixed(3)})`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, d.r, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                requestAnimationFrame(draw);
+            }
+
+            requestAnimationFrame(draw);
         }
 
         const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(e => {
-                const el = e.target;
                 if (e.isIntersecting) {
-                    clearTimeout(el.revealHideTimer);
-                    el.classList.add('animate', 'active', 'was-active');
-                    return;
+                    const el = e.target;
+                    el.classList.add('is-revealed');
+                    revealObserver.unobserve(el);
+                    if (el.classList.contains('publication-card') || el.classList.contains('social-card')) {
+                        setTimeout(() => {
+                            el.style.transitionDelay = '0ms';
+                            el.classList.add('is-settled');
+                        }, 650);
+                    }
                 }
-                const vh = window.innerHeight;
-                const rect = e.boundingClientRect;
-                if (rect.bottom >= 0 && rect.top <= vh + 80) return;
-                clearTimeout(el.revealHideTimer);
-                el.revealHideTimer = setTimeout(() => {
-                    el.classList.remove('animate', 'active');
-                    if (el.classList.contains('was-active')) el.classList.add('seen');
-                }, 150);
             });
-        }, { threshold: 0 });
+        }, { threshold: 0.06, rootMargin: '0px 0px -30px 0px' });
 
         function observeElements() {
-            document.querySelectorAll('.reveal, .publication-card:not(.hidden), .social-card').forEach(el => revealObserver.observe(el));
+            document.querySelectorAll('.reveal:not(.is-revealed), .publication-card:not(.hidden):not(.is-revealed), .social-card:not(.is-revealed)').forEach(el => {
+                revealObserver.observe(el);
+            });
         }
 
         const isTouch = window.matchMedia('(pointer: coarse)').matches;
-        let hoverOffState = false;
 
-        function setHoverOff(off) {
-            if (off === hoverOffState) return;
-            hoverOffState = off;
-            document.documentElement.classList.toggle('hover-off', off);
+        function clearTouchedCards(except) {
+            document.querySelectorAll('.publication-card.is-touched').forEach((card) => {
+                if (card !== except) card.classList.remove('is-touched');
+            });
         }
 
-        window.addEventListener('scroll', () => setHoverOff(true), { passive: true });
-
-        window.addEventListener('mousemove', () => {
-            if (!isTouch) setHoverOff(false);
-        }, { passive: true });
-
-        window.addEventListener('click', (e) => {
-            if (!isTouch) return;
-            const hoverable = e.target.closest('.publication-card, .social-card, .show-more-btn, nav a, .logo, .footer-left a, .footer-sub-btn, .pubs-tab');
-            setHoverOff(!hoverable);
-        }, { passive: true });
+        if (isTouch) {
+            window.addEventListener('scroll', () => clearTouchedCards(null), { passive: true });
+            window.addEventListener('pointerdown', (e) => {
+                if (!e.target.closest('.publication-card')) {
+                    clearTouchedCards(null);
+                }
+            }, { passive: true });
+            document.getElementById('publicationsGrid').addEventListener('click', (e) => {
+                const card = e.target.closest('.publication-card.is-settled');
+                if (!card) return;
+                const willSelect = !card.classList.contains('is-touched');
+                clearTouchedCards(willSelect ? card : null);
+                card.classList.toggle('is-touched', willSelect);
+            });
+        }
 
         const sections = ['about', 'publications', 'contact'];
         const navLinks = document.querySelectorAll('.nav-link');
@@ -1686,6 +1662,7 @@
             const linkRect = activeLink.getBoundingClientRect();
             indicator.style.left = `${linkRect.left - navRect.left}px`;
             indicator.style.width = `${linkRect.width}px`;
+            GlisseGlass.updateFilter(indicator);
         }
 
         function trackScroll() {
@@ -1755,20 +1732,44 @@
         setInterval(updatePlusUI, 60000);
 
         function init() {
-            createBgDots();
-            renderPublications();
+            initBgCanvas();
             renderSocialLinks();
             updatePlusUI();
+
+            GlisseGlass.refresh();
+            GlisseGlass.attachPullable(document.getElementById('logoBtn'), { holdDelay: 100 });
+            GlisseGlass.attachPullable(document.getElementById('showMoreBtn'), { holdDelay: 100 });
+            GlisseGlass.attachPullable(document.getElementById('footerSubBtn'), { holdDelay: 100 });
+            GlisseGlass.attachPullable(document.getElementById('modalCloseBtn'), {
+                holdDelay: 95,
+                maxAnchorShift: 7,
+                maxStretchX: 0.22,
+                maxStretchY: 0.22,
+                pullRange: 60
+            });
+
+            GlisseGlass.attachPillBar(nav, '.nav-link', indicator, (picked) => {
+                goToSection(picked.dataset.section, true);
+            });
+            GlisseGlass.attachPillBar(
+                document.getElementById('pubsTabs'),
+                '.pubs-tab',
+                document.getElementById('pubsTabIndicator'),
+                (picked) => {
+                    switchPubsTab(picked.dataset.tab);
+                }
+            );
 
             applyInitialHash();
             setTimeout(() => {
                 updateIndicator(currentActiveSection);
                 observeElements();
                 updatePubsTabIndicator();
+                GlisseGlass.refresh();
             }, 100);
         }
 
         init();
     </script>
 </body>
-</html>
+</html>  
